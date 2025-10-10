@@ -53,39 +53,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchUserProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      console.log('Fetching user profile for:', userId);
+      
+      // Set a timeout to prevent infinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
+      );
+      
+      const profilePromise = supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
 
+      const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any;
+
       if (error) {
         console.error('Error fetching user profile:', error);
-        // If profile doesn't exist, create a default one
-        if (error.code === 'PGRST116') {
-          await createUserProfile(userId);
-        } else {
-          // For other errors, create a minimal user object to prevent loops
-          const { data: authData } = await supabase.auth.getUser();
-          setUser({
-            id: userId,
-            email: authData.user?.email || '',
-            role: 'admin'
-          });
-        }
+        // Always create a fallback user to prevent loading loops
+        const { data: authData } = await supabase.auth.getUser();
+        const fallbackUser = {
+          id: userId,
+          email: authData.user?.email || '',
+          role: 'admin' as const
+        };
+        console.log('Setting fallback user:', fallbackUser);
+        setUser(fallbackUser);
       } else {
+        console.log('Profile found:', data);
         setUser(data);
       }
     } catch (error) {
       console.error('Error in fetchUserProfile:', error);
-      // Fallback: create minimal user object
+      // Always create fallback user on any error
       const { data: authData } = await supabase.auth.getUser();
-      setUser({
+      const fallbackUser = {
         id: userId,
         email: authData.user?.email || '',
-        role: 'admin'
-      });
+        role: 'admin' as const
+      };
+      console.log('Setting fallback user after error:', fallbackUser);
+      setUser(fallbackUser);
     } finally {
+      console.log('Setting isLoading to false');
       setIsLoading(false);
     }
   };
