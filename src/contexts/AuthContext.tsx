@@ -117,14 +117,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchUserProfile = async (userId: string, attempt: number = 1) => {
     try {
       console.log(`Fetching user profile for: ${userId} (attempt ${attempt}/${maxRetries})`);
-      console.log('Supabase URL:', supabase.supabaseUrl);
-      
-      // Test basic connectivity first
-      console.log('Testing Supabase connectivity...');
-      const connectivityTest = await supabase.from('profiles').select('count').limit(1);
-      console.log('Connectivity test result:', connectivityTest);
-      
-      console.log('Starting profile query...');
       
       // Set timeout to prevent hanging
       const timeoutPromise = new Promise((_, reject) => 
@@ -134,16 +126,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }, 10000)
       );
       
-      console.log('Creating profile query promise...');
       const profilePromise = supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
 
-      console.log('Racing promises (query vs timeout)...');
       const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any;
-      console.log('Promise race completed. Data:', data, 'Error:', error);
 
       if (error) {
         console.error('Error fetching user profile:', error);
