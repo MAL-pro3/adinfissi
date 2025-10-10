@@ -106,21 +106,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    // Auto logout when tab becomes hidden (user switches tab or minimizes)
+    // Auto logout when tab becomes hidden - DISABLED to prevent hanging
+    // This was causing issues when switching tabs
     const handleVisibilityChange = () => {
-      if (document.hidden && authUser) {
-        console.log('Tab nascosta, eseguendo logout automatico...');
-        logout();
-      }
+      // Disabled: was causing app to hang when switching tabs
+      // if (document.hidden && authUser) {
+      //   console.log('Tab nascosta, eseguendo logout automatico...');
+      //   logout();
+      // }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    // Removed visibilitychange listener - was causing hanging issues
 
     return () => {
       subscription.unsubscribe();
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      // Removed visibilitychange cleanup
     };
   }, []);
 
