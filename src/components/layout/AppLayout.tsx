@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
   LayoutDashboard, 
   Users, 
@@ -17,10 +18,17 @@ const AppLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    navigate('/app/login');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/app/login');
+    } catch (error) {
+      console.error('Errore durante logout:', error);
+      // Force navigation even if logout fails
+      navigate('/app/login');
+    }
   };
 
   const navigation = [

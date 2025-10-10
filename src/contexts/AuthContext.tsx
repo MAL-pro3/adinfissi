@@ -92,15 +92,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     // Auto logout on window close/refresh
-    const handleBeforeUnload = () => {
-      supabase.auth.signOut();
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      // Force immediate logout without waiting
+      try {
+        // Clear local state immediately
+        localStorage.removeItem('supabase.auth.token');
+        sessionStorage.clear();
+        
+        // Send logout request (may not complete due to page unload)
+        supabase.auth.signOut({ scope: 'local' });
+      } catch (error) {
+        console.error('Errore durante logout automatico:', error);
+      }
     };
 
-    // Auto logout on window focus lost (optional - can be removed if too aggressive)
+    // Auto logout when tab becomes hidden (user switches tab or minimizes)
     const handleVisibilityChange = () => {
-      if (document.hidden) {
-        // Optional: logout when tab becomes hidden
-        // supabase.auth.signOut();
+      if (document.hidden && authUser) {
+        console.log('Tab nascosta, eseguendo logout automatico...');
+        logout();
       }
     };
 
@@ -279,11 +289,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
-      await supabase.auth.signOut();
+      console.log('Eseguendo logout...');
+      
+      // Clear all local state first
       setUser(null);
       setAuthUser(null);
+      setIsLoading(false);
+      setRetryCount(0);
+      
+      // Clear any stored session data
+      localStorage.removeItem('supabase.auth.token');
+      sessionStorage.clear();
+      
+      // Sign out from Supabase
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Errore Supabase durante logout:', error);
+      }
+      
+      console.log('Logout completato');
     } catch (error) {
       console.error('Errore durante il logout:', error);
+      // Force clear state even if logout fails
+      setUser(null);
+      setAuthUser(null);
+      setIsLoading(false);
     }
   };
 
