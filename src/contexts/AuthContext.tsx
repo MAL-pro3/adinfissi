@@ -55,47 +55,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('Fetching user profile for:', userId);
       
-      // Set a timeout to prevent infinite loading
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
-      );
-      
-      const profilePromise = supabase
+      const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
 
-      const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any;
-
       if (error) {
         console.error('Error fetching user profile:', error);
-        // Always create a fallback user to prevent loading loops
-        const { data: authData } = await supabase.auth.getUser();
-        const fallbackUser = {
-          id: userId,
-          email: authData.user?.email || '',
-          role: 'admin' as const
-        };
-        console.log('Setting fallback user:', fallbackUser);
-        setUser(fallbackUser);
+        
+        // If profile doesn't exist, try to create it for authenticated users only
+        if (error.code === 'PGRST116') {
+          console.log('Profile not found, attempting to create...');
+          await createUserProfile(userId);
+        } else {
+          // For other errors, sign out the user as they shouldn't have access
+          console.error('Profile access error, signing out user');
+          await supabase.auth.signOut();
+          setUser(null);
+        }
       } else {
         console.log('Profile found:', data);
         setUser(data);
       }
     } catch (error) {
       console.error('Error in fetchUserProfile:', error);
-      // Always create fallback user on any error
-      const { data: authData } = await supabase.auth.getUser();
-      const fallbackUser = {
-        id: userId,
-        email: authData.user?.email || '',
-        role: 'admin' as const
-      };
-      console.log('Setting fallback user after error:', fallbackUser);
-      setUser(fallbackUser);
+      // On any unexpected error, sign out for security
+      await supabase.auth.signOut();
+      setUser(null);
     } finally {
-      console.log('Setting isLoading to false');
       setIsLoading(false);
     }
   };
@@ -103,16 +91,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const createUserProfile = async (userId: string) => {
     try {
       const { data: authData } = await supabase.auth.getUser();
-      const email = authData.user?.email || '';
       
+      if (!authData.user || !authData.user.email) {
+        console.error('No authenticated user found or email missing');
+        await supabase.auth.signOut();
+        setUser(null);
+        return;
+      }
+
+      // Verify the user is properly authenticated
+      if (authData.user.id !== userId) {
+        console.error('User ID mismatch, potential security issue');
+        await supabase.auth.signOut();
+        setUser(null);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('profiles')
         .insert([
           {
             id: userId,
-            email: email,
-            full_name: null,
-            role: 'admin' // Default role for now
+            email: authData.user.email,
+            full_name: authData.user.user_metadata?.full_name || '',
+            role: 'user' // Default role for new users (not admin)
           }
         ])
         .select()
@@ -120,24 +122,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         console.error('Error creating user profile:', error);
-        // Even if profile creation fails, set a minimal user object
-        setUser({
-          id: userId,
-          email: email,
-          role: 'admin'
-        });
-      } else {
-        setUser(data);
+        // If we can't create a profile, the user shouldn't have access
+        await supabase.auth.signOut();
+        setUser(null);
+        return;
       }
+
+      console.log('Profile created successfully:', data);
+      setUser(data);
     } catch (error) {
       console.error('Error in createUserProfile:', error);
-      // Fallback: create minimal user object
-      const { data: authData } = await supabase.auth.getUser();
-      setUser({
-        id: userId,
-        email: authData.user?.email || '',
-        role: 'admin'
-      });
+      // On any error, sign out for security
+      await supabase.auth.signOut();
+      setUser(null);
     }
   };
 
