@@ -25,23 +25,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // ✅ Recupera la sessione all’avvio
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setAuthUser(session?.user ?? null);
+    // ✅ Recupera la sessione memorizzata localmente (token persistente)
+    const loadSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Errore nel recupero sessione:', error);
+        setIsLoading(false);
+        return;
+      }
+
+      const session = data.session;
       if (session?.user) {
-        fetchUserProfile(session.user.id);
+        setAuthUser(session.user);
+        await fetchUserProfile(session.user.id);
       } else {
         setIsLoading(false);
       }
-    });
+    };
+
+    loadSession();
 
     // ✅ Resta in ascolto dei cambiamenti di auth (login/logout/refresh)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setAuthUser(session?.user ?? null);
+      async (event, session) => {
+        console.log('Auth event:', event);
         if (session?.user) {
+          setAuthUser(session.user);
           await fetchUserProfile(session.user.id);
         } else {
+          setAuthUser(null);
           setUser(null);
           setIsLoading(false);
         }
@@ -75,8 +87,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Errore login:', error);
       return false;
     }
-    if (data.session?.user) await fetchUserProfile(data.session.user.id);
-    return true;
+    if (data.session?.user) {
+      setAuthUser(data.session.user);
+      await fetchUserProfile(data.session.user.id);
+      return true;
+    }
+    return false;
   };
 
   const logout = async () => {
