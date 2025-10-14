@@ -222,6 +222,15 @@ class InvoiceServiceClass {
   // Elimina fattura
   async deleteInvoice(id: string): Promise<boolean> {
     try {
+      // Elimina prima le righe della fattura per evitare blocchi RLS/FK
+      const { error: itemsError } = await supabase
+        .from('invoice_items')
+        .delete()
+        .eq('invoice_id', id);
+
+      if (itemsError) throw itemsError;
+
+      // Poi elimina la fattura
       const { error } = await supabase
         .from('invoices')
         .delete()

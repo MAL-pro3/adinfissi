@@ -114,10 +114,15 @@ const Invoices: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('Sei sicuro di voler eliminare questa fattura?')) {
       try {
-        await InvoiceService.deleteInvoice(id);
-        loadData();
+        const ok = await InvoiceService.deleteInvoice(id);
+        if (ok) {
+          loadData();
+        } else {
+          alert('Eliminazione non riuscita. Controlla i permessi o riprova.');
+        }
       } catch (error) {
         console.error('Errore durante l\'eliminazione della fattura:', error);
+        alert('Si è verificato un errore durante l\'eliminazione.');
       }
     }
   };
