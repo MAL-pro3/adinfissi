@@ -24,13 +24,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // 🔹 Recupera e mantiene la sessione
   useEffect(() => {
-    // ✅ Recupera la sessione memorizzata localmente (token persistente)
+    let mounted = true;
+
     const loadSession = async () => {
+      setIsLoading(true);
       const { data, error } = await supabase.auth.getSession();
+
       if (error) {
         console.error('Errore nel recupero sessione:', error);
-        setIsLoading(false);
+        if (mounted) setIsLoading(false);
         return;
       }
 
@@ -39,20 +43,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAuthUser(session.user);
         await fetchUserProfile(session.user.id);
       } else {
-        setIsLoading(false);
+        if (mounted) setIsLoading(false);
       }
     };
 
     loadSession();
 
-    // ✅ Resta in ascolto dei cambiamenti di auth (login/logout/refresh)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    // 🔹 Listener per eventi auth
+    const { data: listener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth event:', event);
-        if (session?.user) {
-          setAuthUser(session.user);
-          await fetchUserProfile(session.user.id);
-        } else {
+
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          // Evita di ricaricare se è lo stesso utente
+          if (!authUser || authUser.id !== session?.user?.id) {
+            setAuthUser(session?.user ?? null);
+            if (session?.user) await fetchUserProfile(session.user.id);
+          }
+        }
+
+        if (event === 'SIGNED_OUT') {
           setAuthUser(null);
           setUser(null);
           setIsLoading(false);
@@ -61,11 +71,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     return () => {
-      subscription.unsubscribe();
+      mounted = false;
+      listener.subscription.unsubscribe();
     };
   }, []);
 
+  // 🔹 Recupera profilo dal DB
   const fetchUserProfile = async (userId: string) => {
+    console.log('Fetching user profile for ID:', userId);
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -81,20 +94,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   };
 
+  // 🔹 Login utente
   const login = async (email: string, password: string): Promise<boolean> => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       console.error('Errore login:', error);
       return false;
     }
+
     if (data.session?.user) {
       setAuthUser(data.session.user);
       await fetchUserProfile(data.session.user.id);
-      return true;
     }
-    return false;
+    return true;
   };
 
+  // 🔹 Logout utente
   const logout = async () => {
     await supabase.auth.signOut();
     setUser(null);
