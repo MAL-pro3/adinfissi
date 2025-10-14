@@ -24,12 +24,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 🔹 Recupera e mantiene la sessione
+  // ==============================================================
+  // 🔹 Effetto principale: gestione sessione persistente e refresh
+  // ==============================================================
   useEffect(() => {
     let mounted = true;
 
     const loadSession = async () => {
       setIsLoading(true);
+
+      // ✅ Avvia il refresh automatico del token
+      supabase.auth.startAutoRefresh();
+
       const { data, error } = await supabase.auth.getSession();
 
       if (error) {
@@ -39,23 +45,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const session = data.session;
+
       if (session?.user) {
+        console.log('Sessione trovata, utente:', session.user.id);
         setAuthUser(session.user);
         await fetchUserProfile(session.user.id);
       } else {
+        console.log('Nessuna sessione trovata');
         if (mounted) setIsLoading(false);
       }
     };
 
     loadSession();
 
-    // 🔹 Listener per eventi auth
+    // ✅ Listener eventi auth (login, logout, refresh)
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth event:', event);
 
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          // Evita di ricaricare se è lo stesso utente
           if (!authUser || authUser.id !== session?.user?.id) {
             setAuthUser(session?.user ?? null);
             if (session?.user) await fetchUserProfile(session.user.id);
@@ -63,6 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (event === 'SIGNED_OUT') {
+          console.log('Utente disconnesso');
           setAuthUser(null);
           setUser(null);
           setIsLoading(false);
@@ -70,13 +79,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     );
 
+    // ✅ Cleanup alla disconnessione del componente
     return () => {
       mounted = false;
+      supabase.auth.stopAutoRefresh();
       listener.subscription.unsubscribe();
     };
   }, []);
 
-  // 🔹 Recupera profilo dal DB
+  // ==============================================================
+  // 🔹 Recupera profilo utente da Supabase (tabella profiles)
+  // ==============================================================
   const fetchUserProfile = async (userId: string) => {
     console.log('Fetching user profile for ID:', userId);
     const { data, error } = await supabase
@@ -89,12 +102,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Errore fetch profilo:', error);
       setUser(null);
     } else {
+      console.log('Profilo caricato:', data);
       setUser(data);
     }
+
     setIsLoading(false);
   };
 
-  // 🔹 Login utente
+  // ==============================================================
+  // 🔹 Login utente con email e password
+  // ==============================================================
   const login = async (email: string, password: string): Promise<boolean> => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
@@ -103,19 +120,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     if (data.session?.user) {
+      console.log('Login riuscito:', data.session.user.id);
       setAuthUser(data.session.user);
       await fetchUserProfile(data.session.user.id);
     }
     return true;
   };
 
+  // ==============================================================
   // 🔹 Logout utente
+  // ==============================================================
   const logout = async () => {
     await supabase.auth.signOut();
+    supabase.auth.stopAutoRefresh();
     setUser(null);
     setAuthUser(null);
   };
 
+  // ==============================================================
+  // 🔹 Provider React Context
+  // ==============================================================
   return (
     <AuthContext.Provider value={{ user, authUser, login, logout, isLoading }}>
       {children}
@@ -123,6 +147,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// ==============================================================
+ // 🔹 Hook personalizzato per usare il contesto Auth
+// ==============================================================
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth deve essere usato dentro AuthProvider');
