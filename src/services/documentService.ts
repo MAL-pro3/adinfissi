@@ -66,7 +66,6 @@ export class DocumentService {
         .from('client_documents')
         .select('*')
         .eq('client_id', clientId)
-        .eq('user_id', user.user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -202,7 +201,6 @@ export class DocumentService {
         .from('client_documents')
         .select('file_path')
         .eq('id', documentId)
-        .eq('user_id', user.user.id)
         .single();
 
       if (fetchError || !document) {
@@ -214,7 +212,7 @@ export class DocumentService {
         .from('client_documents')
         .delete()
         .eq('id', documentId)
-        .eq('user_id', user.user.id);
+        ;
 
       if (deleteError) throw deleteError;
 
@@ -251,7 +249,6 @@ export class DocumentService {
         .from('client_documents')
         .select('file_path, file_name')
         .eq('id', documentId)
-        .eq('user_id', user.user.id)
         .single();
 
       if (fetchError || !document) {
@@ -282,7 +279,7 @@ export class DocumentService {
         .from('client_documents')
         .update({ notes, updated_at: new Date().toISOString() })
         .eq('id', documentId)
-        .eq('user_id', user.user.id);
+        ;
 
       if (error) throw error;
       return true;
@@ -329,7 +326,7 @@ export class DocumentService {
         .from('client_documents')
         .delete()
         .eq('client_id', clientId)
-        .eq('user_id', user.user.id);
+        ;
 
       if (error) throw error;
     } catch (error) {
