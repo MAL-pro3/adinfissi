@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Menu, 
-  X, 
-  ArrowDown, 
-  MessageCircle, 
-  Building2, 
-  Users, 
-  Award, 
-  ChevronLeft, 
-  ChevronRight, 
-  MapPin, 
-  Phone, 
-  Clock, 
-  Instagram, 
-  Facebook 
+import {
+  Menu,
+  X,
+  ArrowRight,
+  MessageCircle,
+  Building2,
+  Users,
+  Award,
+  MapPin,
+  Phone,
+  Clock,
+  Instagram,
+  Facebook,
 } from 'lucide-react';
+import { categorieLavori } from '../../data/lavori';
 
 const Landing: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -30,83 +27,21 @@ const Landing: React.FC = () => {
     }
   };
 
-  const scrollToGallery = () => {
-    const element = document.getElementById('gallery');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const galleryImages = [
-    {
-      url: 'https://images.pexels.com/photos/1643389/pexels-photo-1643389.jpeg?auto=compress&cs=tinysrgb&w=800',
-      title: 'Infissi moderni',
-      category: 'Infissi'
-    },
-    {
-      url: 'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=800',
-      title: 'Cancello in alluminio',
-      category: 'Cancelli'
-    },
-    {
-      url: 'https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=800',
-      title: 'Pergolato elegante',
-      category: 'Pergolati'
-    },
-    {
-      url: 'https://images.pexels.com/photos/3555615/pexels-photo-3555615.jpeg?auto=compress&cs=tinysrgb&w=800',
-      title: 'Finestre su misura',
-      category: 'Infissi'
-    },
-    {
-      url: 'https://images.pexels.com/photos/1643389/pexels-photo-1643389.jpeg?auto=compress&cs=tinysrgb&w=800',
-      title: 'Tenda da sole moderna',
-      category: 'Tende'
-    },
-    {
-      url: 'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=800',
-      title: 'Cancello automatico',
-      category: 'Cancelli'
-    },
-    {
-      url: 'https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=800',
-      title: 'Pergolato con tende',
-      category: 'Pergolati'
-    },
-    {
-      url: 'https://images.pexels.com/photos/3555615/pexels-photo-3555615.jpeg?auto=compress&cs=tinysrgb&w=800',
-      title: 'Porta d\'ingresso',
-      category: 'Porte'
-    }
-  ];
-
-  const openLightbox = (index: number) => {
-    setCurrentIndex(index);
-    setLightboxOpen(true);
-  };
-
-  const nextImage = () => {
-    setCurrentIndex((prev) => (prev + 1) % galleryImages.length);
-  };
-
-  const prevImage = () => {
-    setCurrentIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
-  };
+  const [selectedCategoria, setSelectedCategoria] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
       <header className="fixed top-0 left-0 right-0 bg-gray-900 text-white z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
-            <div className="flex items-center">
+            <Link to="/" className="flex items-center">
               <div className="text-2xl font-bold tracking-tight">
                 <span className="text-white">AD</span>
                 <span className="text-red-700"> INFISSI</span>
               </div>
-            </div>
+            </Link>
 
-            <nav className="hidden md:flex space-x-8">
+            <nav className="hidden md:flex space-x-8 items-center">
               <button
                 onClick={() => scrollToSection('hero')}
                 className="hover:text-red-700 transition-colors"
@@ -119,12 +54,13 @@ const Landing: React.FC = () => {
               >
                 Chi Siamo
               </button>
-              <button
-                onClick={() => scrollToSection('gallery')}
+              <Link
+                to="/lavori"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="hover:text-red-700 transition-colors"
               >
                 I Nostri Lavori
-              </button>
+              </Link>
               <button
                 onClick={() => scrollToSection('contact')}
                 className="hover:text-red-700 transition-colors"
@@ -163,12 +99,13 @@ const Landing: React.FC = () => {
               >
                 Chi Siamo
               </button>
-              <button
-                onClick={() => scrollToSection('gallery')}
+              <Link
+                to="/lavori"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full text-left py-2 hover:text-red-700 transition-colors"
               >
                 I Nostri Lavori
-              </button>
+              </Link>
               <button
                 onClick={() => scrollToSection('contact')}
                 className="block w-full text-left py-2 hover:text-red-700 transition-colors"
@@ -177,6 +114,7 @@ const Landing: React.FC = () => {
               </button>
               <Link
                 to="/app"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full text-left py-2 text-red-700 font-semibold"
               >
                 Area Riservata
@@ -186,12 +124,15 @@ const Landing: React.FC = () => {
         )}
       </header>
 
-      {/* Hero Section */}
-      <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section
+        id="hero"
+        className="relative h-screen flex items-center justify-center overflow-hidden"
+      >
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(https://images.pexels.com/photos/1643389/pexels-photo-1643389.jpeg?auto=compress&cs=tinysrgb&w=1920)',
+            backgroundImage:
+              'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(https://images.pexels.com/photos/1643389/pexels-photo-1643389.jpeg?auto=compress&cs=tinysrgb&w=1920)',
           }}
         />
 
@@ -207,13 +148,13 @@ const Landing: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={scrollToGallery}
+            <Link
+              to="/lavori"
               className="bg-red-700 hover:bg-red-800 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
             >
               Scopri i nostri lavori
-              <ArrowDown size={20} />
-            </button>
+              <ArrowRight size={20} />
+            </Link>
             <a
               href="https://wa.me/393998760"
               target="_blank"
@@ -227,11 +168,28 @@ const Landing: React.FC = () => {
         </div>
 
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ArrowDown className="text-white" size={32} />
+          <button
+            onClick={() => scrollToSection('about')}
+            aria-label="Scorri giù"
+            className="text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 5v14M5 12l7 7 7-7" />
+            </svg>
+          </button>
         </div>
       </section>
 
-      {/* About Section */}
       <section id="about" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -244,16 +202,22 @@ const Landing: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <p className="text-lg text-gray-700 leading-relaxed">
-                <strong className="text-red-700">AD INFISSI srl</strong> nasce oltre 20 anni fa ad Aprilia (RM), in via Nettunense 235.
+                <strong className="text-red-700">AD INFISSI srl</strong> nasce oltre 20 anni fa
+                ad Aprilia (RM), in via Nettunense 235.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Specializzati nella produzione e installazione di <strong>infissi, cancelli, tende da sole e pergolati in alluminio</strong>, offriamo soluzioni innovative e su misura per ogni esigenza.
+                Specializzati nella produzione e installazione di{' '}
+                <strong>infissi, cancelli, tende da sole e pergolati in alluminio</strong>,
+                offriamo soluzioni innovative e su misura per ogni esigenza.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Alla guida c'è <strong>Giovanni</strong>, fondatore e cuore dell'azienda, affiancato da una squadra di operai esperti e da due segretarie pronte ad accogliere i clienti nel nostro showroom.
+                Alla guida c'è <strong>Giovanni</strong>, fondatore e cuore dell'azienda,
+                affiancato da una squadra di operai esperti e da due segretarie pronte ad
+                accogliere i clienti nel nostro showroom.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Siamo un'<strong>azienda familiare</strong> con un team unito e competente, che crede nel lavoro fatto con passione e precisione.
+                Siamo un'<strong>azienda familiare</strong> con un team unito e competente,
+                che crede nel lavoro fatto con passione e precisione.
               </p>
             </div>
 
@@ -268,7 +232,8 @@ const Landing: React.FC = () => {
                       Showroom Moderno
                     </h3>
                     <p className="text-gray-600">
-                      Vieni a visitare il nostro showroom in via Nettunense 235, Aprilia. Potrai toccare con mano la qualità dei nostri prodotti.
+                      Vieni a visitare il nostro showroom in via Nettunense 235, Aprilia.
+                      Potrai toccare con mano la qualità dei nostri prodotti.
                     </p>
                   </div>
                 </div>
@@ -284,7 +249,8 @@ const Landing: React.FC = () => {
                       Team Esperto
                     </h3>
                     <p className="text-gray-600">
-                      Un team di 10 professionisti dedicati, guidati dalla passione per il lavoro ben fatto e l'attenzione al dettaglio.
+                      Un team di 10 professionisti dedicati, guidati dalla passione per il
+                      lavoro ben fatto e l'attenzione al dettaglio.
                     </p>
                   </div>
                 </div>
@@ -300,7 +266,8 @@ const Landing: React.FC = () => {
                       Qualità Garantita
                     </h3>
                     <p className="text-gray-600">
-                      Oltre 20 anni di esperienza e migliaia di clienti soddisfatti testimoniano la qualità del nostro lavoro.
+                      Oltre 20 anni di esperienza e migliaia di clienti soddisfatti
+                      testimoniano la qualità del nostro lavoro.
                     </p>
                   </div>
                 </div>
@@ -310,8 +277,7 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section id="gallery" className="py-20 bg-gray-50">
+      <section id="categorie-lavori" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
@@ -319,77 +285,66 @@ const Landing: React.FC = () => {
             </h2>
             <div className="w-24 h-1 bg-red-700 mx-auto mb-6"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Scopri alcuni dei progetti realizzati con passione e professionalità
+              Esplora le nostre categorie e scopri tutti i progetti realizzati
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {galleryImages.map((image, index) => (
-              <div
-                key={index}
-                className="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer aspect-square"
-                onClick={() => openLightbox(index)}
+            {categorieLavori.map((cat) => (
+              <Link
+                key={cat.key}
+                to={`/lavori?cat=${cat.key}`}
+                onMouseEnter={() => setSelectedCategoria(cat.key)}
+                onMouseLeave={() => setSelectedCategoria(null)}
+                className="group relative overflow-hidden rounded-xl shadow-lg aspect-[3/4] block focus:outline-none focus:ring-4 focus:ring-red-500/40 transition-all duration-300"
               >
                 <img
-                  src={image.url}
-                  alt={image.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  src={cat.copertina}
+                  alt={cat.nome}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                  <span className="text-red-500 text-sm font-semibold mb-1">{image.category}</span>
-                  <h3 className="text-white font-bold text-lg">{image.title}</h3>
+
+                <div
+                  className={`absolute inset-0 bg-gradient-to-t via-black/50 to-transparent transition-opacity duration-300 ${
+                    selectedCategoria === cat.key
+                      ? 'from-black/90 opacity-100'
+                      : 'from-black/80 opacity-90'
+                  }`}
+                />
+
+                <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+                  <div className="w-12 h-1 bg-red-600 mb-4 transition-all duration-500 group-hover:w-20" />
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-2 uppercase tracking-wide">
+                    {cat.nome}
+                  </h3>
+                  <p className="text-sm text-gray-200 mb-4 line-clamp-2">
+                    {cat.descrizione}
+                  </p>
+                  <div className="flex items-center gap-2 text-white font-semibold text-sm group-hover:text-red-500 transition-colors">
+                    Vedi tutti i lavori
+                    <ArrowRight
+                      size={16}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
-        </div>
 
-        {lightboxOpen && (
-          <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
-            <button
-              onClick={() => setLightboxOpen(false)}
-              className="absolute top-4 right-4 text-white hover:text-red-500 transition-colors"
+          <div className="mt-16 text-center">
+            <Link
+              to="/lavori"
+              className="inline-flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl"
             >
-              <X size={40} />
-            </button>
-
-            <button
-              onClick={prevImage}
-              className="absolute left-4 text-white hover:text-red-500 transition-colors"
-            >
-              <ChevronLeft size={48} />
-            </button>
-
-            <button
-              onClick={nextImage}
-              className="absolute right-4 text-white hover:text-red-500 transition-colors"
-            >
-              <ChevronRight size={48} />
-            </button>
-
-            <div className="max-w-5xl max-h-[90vh] px-4">
-              <img
-                src={galleryImages[currentIndex].url}
-                alt={galleryImages[currentIndex].title}
-                className="max-w-full max-h-[80vh] object-contain rounded-lg"
-              />
-              <div className="text-center mt-4">
-                <span className="text-red-500 text-sm font-semibold">
-                  {galleryImages[currentIndex].category}
-                </span>
-                <h3 className="text-white text-2xl font-bold mt-2">
-                  {galleryImages[currentIndex].title}
-                </h3>
-                <p className="text-gray-400 mt-2">
-                  {currentIndex + 1} / {galleryImages.length}
-                </p>
-              </div>
-            </div>
+              Visualizza galleria completa
+              <ArrowRight size={20} />
+            </Link>
           </div>
-        )}
+        </div>
       </section>
 
-      {/* Contact Section */}
       <section id="contact" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -412,7 +367,8 @@ const Landing: React.FC = () => {
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Indirizzo</h3>
                     <p className="text-gray-600 text-lg">
-                      Via Nettunense 235<br />
+                      Via Nettunense 235
+                      <br />
                       Aprilia (RM)
                     </p>
                   </div>
@@ -426,7 +382,10 @@ const Landing: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Telefono</h3>
-                    <a href="tel:+393998760" className="text-gray-600 text-lg hover:text-red-700 transition-colors">
+                    <a
+                      href="tel:+393998760"
+                      className="text-gray-600 text-lg hover:text-red-700 transition-colors"
+                    >
                       393 998 7060
                     </a>
                   </div>
@@ -495,11 +454,12 @@ const Landing: React.FC = () => {
               <div className="p-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Dove Siamo</h3>
                 <p className="text-gray-600 mb-6">
-                  Vieni a trovarci nel nostro showroom in Via Nettunense 235, Aprilia (RM). 
-                  Potrai vedere da vicino i nostri prodotti e ricevere una consulenza personalizzata.
+                  Vieni a trovarci nel nostro showroom in Via Nettunense 235, Aprilia (RM).
+                  Potrai vedere da vicino i nostri prodotti e ricevere una consulenza
+                  personalizzata.
                 </p>
               </div>
-              
+
               <div className="h-96 w-full">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2982.123456789!2d12.6428!3d41.5928!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132f61b6e7c8a123%3A0x123456789abcdef!2sVia%20Nettunense%2C%20235%2C%2004011%20Aprilia%20LT%2C%20Italy!5e0!3m2!1sen!2sit!4v1234567890123!5m2!1sen!2sit"
@@ -512,26 +472,28 @@ const Landing: React.FC = () => {
                   title="Mappa AD INFISSI - Via Nettunense 235, Aprilia"
                 ></iframe>
               </div>
-              
+
               <div className="p-8 bg-gray-50">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <h4 className="font-bold text-gray-900 mb-2">Indirizzo Completo</h4>
                     <p className="text-gray-600">
-                      Via Nettunense 235<br />
-                      04011 Aprilia (LT)<br />
+                      Via Nettunense 235
+                      <br />
+                      04011 Aprilia (LT)
+                      <br />
                       Lazio, Italia
                     </p>
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 mb-2">Come Raggiungerci</h4>
                     <p className="text-gray-600 text-sm">
-                      Facilmente raggiungibile dalla SS7 Via Appia e dall'autostrada A1. 
+                      Facilmente raggiungibile dalla SS7 Via Appia e dall'autostrada A1.
                       Parcheggio disponibile.
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="mt-6 pt-6 border-t border-gray-200">
                   <div className="flex flex-col sm:flex-row gap-4">
                     <a
@@ -558,17 +520,19 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-white pt-16 pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
             <div>
-              <div className="text-3xl font-bold mb-4">
-                <span className="text-white">AD</span>
-                <span className="text-red-700"> INFISSI</span>
-              </div>
+              <Link to="/" className="inline-block">
+                <div className="text-3xl font-bold mb-4">
+                  <span className="text-white">AD</span>
+                  <span className="text-red-700"> INFISSI</span>
+                </div>
+              </Link>
               <p className="text-gray-400 mb-6">
-                Da oltre 20 anni costruiamo sicurezza, comfort e design per la tua casa e la tua azienda.
+                Da oltre 20 anni costruiamo sicurezza, comfort e design per la tua casa e
+                la tua azienda.
               </p>
               <div className="flex gap-4">
                 <a
@@ -610,12 +574,13 @@ const Landing: React.FC = () => {
                   </button>
                 </li>
                 <li>
-                  <button
-                    onClick={() => scrollToSection('gallery')}
+                  <Link
+                    to="/lavori"
+                    onClick={() => setIsMobileMenuOpen(false)}
                     className="text-gray-400 hover:text-red-700 transition-colors"
                   >
                     I Nostri Lavori
-                  </button>
+                  </Link>
                 </li>
                 <li>
                   <button
@@ -642,7 +607,10 @@ const Landing: React.FC = () => {
                 <li>Via Nettunense 235</li>
                 <li>Aprilia (RM)</li>
                 <li>
-                  <a href="tel:+393998760" className="hover:text-red-700 transition-colors">
+                  <a
+                    href="tel:+393998760"
+                    className="hover:text-red-700 transition-colors"
+                  >
                     Tel: 393 998 7060
                   </a>
                 </li>
@@ -661,9 +629,7 @@ const Landing: React.FC = () => {
           </div>
 
           <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-            <p>
-              Copyright © 2025 AD INFISSI srl - Tutti i diritti riservati
-            </p>
+            <p>Copyright © 2025 AD INFISSI srl - Tutti i diritti riservati</p>
           </div>
         </div>
       </footer>

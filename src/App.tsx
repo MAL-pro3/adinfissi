@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Landing from './components/website/Landing';
+import NostriLavori from './components/website/NostriLavori';
 import AppLayout from './components/layout/AppLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './components/Login';
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           {/* Public website routes */}
           <Route path="/" element={<Landing />} />
+          <Route path="/lavori" element={<NostriLavori />} />
           
           {/* Application routes */}
           <Route path="/app/login" element={<Login />} />
