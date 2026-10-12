@@ -63,8 +63,17 @@ const NostriLavori: React.FC = () => {
     } else {
       setSearchParams({ cat: nuovo });
     }
-    const gallery = document.getElementById('gallery-griglia');
-    if (gallery) gallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Scrolla in modo che la barra filtri (sticky) sia subito sotto l'header.
+    // Uso setTimeout per evitare che il re-render di setSearchParams interrompa lo scroll smooth.
+    setTimeout(() => {
+      const filtriBar = document.querySelector('#gallery-griglia .sticky');
+      if (filtriBar) {
+        const rect = (filtriBar as HTMLElement).getBoundingClientRect();
+        const headerOffset = 80;
+        const scrollTop = window.pageYOffset + rect.top - headerOffset;
+        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+      }
+    }, 0);
   };
 
   const fotoVisibili: { foto: FotoLavoro; categoriaNome: string }[] = useMemo(() => {
@@ -82,6 +91,11 @@ const NostriLavori: React.FC = () => {
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Scrolla sempre all'inizio della pagina quando si entra in /lavori
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, []);
 
   const openLightbox = (index: number) => {
     setCurrentIndex(index);
@@ -110,23 +124,27 @@ const NostriLavori: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="fixed top-0 left-0 right-0 bg-gray-900 text-white z-50 shadow-lg">
+      <header className="fixed top-0 left-0 right-0 bg-gray-900 text-white z-50 shadow-lg overflow-visible">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <Link to="/" className="flex items-center">
-              <div className="text-2xl font-bold tracking-tight">
-                <span className="text-white">AD</span>
-                <span className="text-red-700"> INFISSI</span>
-              </div>
+              <img
+                src="/logo/logo_adinfissi.svg"
+                alt="AD INFISSI"
+                className="h-[100px] w-auto object-contain my-auto"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/logo/logo-placeholder.svg';
+                }}
+              />
             </Link>
 
             <nav className="hidden md:flex space-x-8 items-center">
-              <Link to="/" className="hover:text-red-700 transition-colors">
+              <Link to="/" className="hover:text-brand-yellow-400 transition-colors">
                 Home
               </Link>
               <Link
                 to="/#about"
-                className="hover:text-red-700 transition-colors"
+                className="hover:text-brand-yellow-400 transition-colors"
                 onClick={(e) => {
                   e.preventDefault();
                   window.location.href = '/#about';
@@ -137,13 +155,13 @@ const NostriLavori: React.FC = () => {
               <Link
                 to="/lavori"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-red-600 font-semibold transition-colors"
+                className="text-brand-yellow-400 font-semibold hover:text-brand-yellow-300 transition-colors"
               >
                 I Nostri Lavori
               </Link>
               <Link
                 to="/#contact"
-                className="hover:text-red-700 transition-colors"
+                className="hover:text-brand-yellow-400 transition-colors"
                 onClick={(e) => {
                   e.preventDefault();
                   window.location.href = '/#contact';
@@ -153,7 +171,7 @@ const NostriLavori: React.FC = () => {
               </Link>
               <Link
                 to="/app"
-                className="text-red-700 hover:text-red-600 font-semibold transition-colors"
+                className="text-brand-yellow-400 hover:text-brand-yellow-300 font-semibold transition-colors"
               >
                 Area Riservata
               </Link>
@@ -174,35 +192,35 @@ const NostriLavori: React.FC = () => {
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+                className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
               >
                 Home
               </Link>
               <Link
                 to="/#about"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+                className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
               >
                 Chi Siamo
               </Link>
               <Link
                 to="/lavori"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-left py-2 text-red-600 font-semibold transition-colors"
+                className="block w-full text-left py-2 text-brand-yellow-400 font-semibold transition-colors"
               >
                 I Nostri Lavori
               </Link>
               <Link
                 to="/#contact"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+                className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
               >
                 Contatti
               </Link>
               <Link
                 to="/app"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-left py-2 text-red-700 font-semibold"
+                className="block w-full text-left py-2 text-brand-yellow-400 font-semibold"
               >
                 Area Riservata
               </Link>
@@ -225,7 +243,7 @@ const NostriLavori: React.FC = () => {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-gray-300 hover:text-red-500 transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-gray-300 hover:text-brand-yellow-400 transition-colors mb-6"
           >
             <ArrowLeft size={18} />
             Torna alla home
@@ -233,7 +251,7 @@ const NostriLavori: React.FC = () => {
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 leading-tight">
             I Nostri Lavori
           </h1>
-          <div className="w-24 h-1 bg-red-700 mb-6" />
+          <div className="w-24 h-1 bg-brand-yellow-500 mb-6" />
           <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl leading-relaxed">
             Una selezione dei nostri progetti realizzati su misura: infissi,
             pergolati, cancelli e porte. Ogni lavoro è frutto di artigianato,
@@ -247,7 +265,7 @@ const NostriLavori: React.FC = () => {
                 onClick={() => cambiaFiltro(c.key)}
                 className={`px-5 py-2.5 rounded-full font-medium transition-all border border-white/20 ${
                   categoriaAttiva?.key === c.key
-                    ? 'bg-red-700 text-white border-red-700 shadow-lg shadow-red-900/40'
+                    ? 'bg-brand-yellow-400 text-gray-900 border-brand-yellow-400 shadow-lg shadow-brand-yellow-900/20'
                     : 'bg-white/5 text-white hover:bg-white/10'
                 }`}
               >
@@ -258,22 +276,25 @@ const NostriLavori: React.FC = () => {
         </div>
       </section>
 
-      <section id="gallery-griglia" className="py-16 bg-gray-50">
+      <section id="gallery-griglia" className="py-16 bg-gray-50 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-2 sm:gap-3 mb-8 p-1 bg-white rounded-xl shadow-sm border border-gray-200 inline-flex">
-            {FILTRI.map((f) => (
-              <button
-                key={f.key}
-                onClick={() => cambiaFiltro(f.key)}
-                className={`px-4 sm:px-6 py-2.5 rounded-lg font-semibold transition-all text-sm sm:text-base ${
-                  filtro === f.key
-                    ? 'bg-red-700 text-white shadow-md'
-                    : 'bg-transparent text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
+          {/* Barra filtri categorie: resta sticky sotto l'header mentre si scrolla */}
+          <div className="sticky top-20 z-30 bg-gray-50 pt-3 pb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <div className="flex flex-wrap gap-2 sm:gap-3 p-1 bg-white rounded-xl shadow-sm border border-gray-200 inline-flex">
+              {FILTRI.map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => cambiaFiltro(f.key)}
+                  className={`px-4 sm:px-6 py-2.5 rounded-lg font-semibold transition-all text-sm sm:text-base ${
+                    filtro === f.key
+                      ? 'bg-brand-yellow-400 text-gray-900 shadow-md'
+                      : 'bg-transparent text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {categoriaAttiva && (
@@ -288,7 +309,7 @@ const NostriLavori: React.FC = () => {
                   <h2 className="text-3xl font-bold text-gray-900 mb-2">
                     {categoriaAttiva.nome}
                   </h2>
-                  <div className="w-16 h-1 bg-red-700 mb-4" />
+                  <div className="w-16 h-1 bg-brand-yellow-500 mb-4" />
                   <p className="text-gray-700 leading-relaxed text-lg">
                     {categoriaAttiva.descrizione}
                   </p>
@@ -310,7 +331,7 @@ const NostriLavori: React.FC = () => {
                 <button
                   key={`${item.categoriaNome}-${item.foto.titolo}-${index}`}
                   onClick={() => openLightbox(index)}
-                  className="group relative overflow-hidden rounded-2xl shadow-md aspect-[4/3] block w-full text-left focus:outline-none focus:ring-4 focus:ring-red-500/30 hover:shadow-2xl transition-all duration-300"
+                  className="group relative overflow-hidden rounded-2xl shadow-md aspect-[4/3] block w-full text-left focus:outline-none focus:ring-4 focus:ring-brand-yellow-400/30 hover:shadow-2xl transition-all duration-300"
                 >
                   <img
                     src={item.foto.url}
@@ -320,7 +341,7 @@ const NostriLavori: React.FC = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute inset-x-0 bottom-0 p-5 text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
-                    <span className="inline-block text-xs uppercase tracking-wider font-bold bg-red-700 px-2.5 py-1 rounded mb-2">
+                    <span className="inline-block text-xs uppercase tracking-wider font-bold bg-brand-yellow-400 text-gray-900 px-2.5 py-1 rounded mb-2">
                       {item.categoriaNome}
                     </span>
                     <h3 className="text-lg sm:text-xl font-bold leading-tight mb-1">
@@ -337,7 +358,7 @@ const NostriLavori: React.FC = () => {
 
           <div className="mt-16 text-center">
             <a
-              href="https://wa.me/393998760?text=Ciao,%20ho%20visto%20i%20vostri%20lavori%20e%20vorrei%20un%20preventivo"
+              href="https://wa.me/3939987060?text=Ciao,%20ho%20visto%20i%20vostri%20lavori%20e%20vorrei%20un%20preventivo"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl"
@@ -359,7 +380,7 @@ const NostriLavori: React.FC = () => {
           <button
             onClick={() => setLightboxOpen(false)}
             aria-label="Chiudi"
-            className="absolute top-4 right-4 text-white hover:text-red-500 transition-colors p-2 rounded-full hover:bg-white/10"
+            className="absolute top-4 right-4 text-white hover:text-brand-yellow-400 transition-colors p-2 rounded-full hover:bg-white/10"
           >
             <X size={36} />
           </button>
@@ -367,7 +388,7 @@ const NostriLavori: React.FC = () => {
           <button
             onClick={prevImage}
             aria-label="Foto precedente"
-            className="absolute left-2 sm:left-6 text-white hover:text-red-500 transition-colors p-2 rounded-full hover:bg-white/10"
+            className="absolute left-2 sm:left-6 text-white hover:text-brand-yellow-400 transition-colors p-2 rounded-full hover:bg-white/10"
           >
             <ChevronLeft size={48} />
           </button>
@@ -375,7 +396,7 @@ const NostriLavori: React.FC = () => {
           <button
             onClick={nextImage}
             aria-label="Foto successiva"
-            className="absolute right-2 sm:right-6 text-white hover:text-red-500 transition-colors p-2 rounded-full hover:bg-white/10"
+            className="absolute right-2 sm:right-6 text-white hover:text-brand-yellow-400 transition-colors p-2 rounded-full hover:bg-white/10"
           >
             <ChevronRight size={48} />
           </button>
@@ -387,7 +408,7 @@ const NostriLavori: React.FC = () => {
               className="max-w-full max-h-[70vh] mx-auto object-contain rounded-lg shadow-2xl"
             />
             <div className="text-center mt-5 px-4">
-              <span className="text-red-500 text-xs sm:text-sm uppercase tracking-wider font-bold">
+              <span className="text-brand-yellow-400 text-xs sm:text-sm uppercase tracking-wider font-bold">
                 {fotoVisibili[currentIndex].categoriaNome}
               </span>
               <h3 className="text-white text-xl sm:text-2xl font-bold mt-2">
@@ -411,10 +432,14 @@ const NostriLavori: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
             <div>
               <Link to="/" className="inline-block">
-                <div className="text-3xl font-bold mb-4">
-                  <span className="text-white">AD</span>
-                  <span className="text-red-700"> INFISSI</span>
-                </div>
+                <img
+                  src="/logo/logo_adinfissi.svg"
+                  alt="AD INFISSI"
+                  className="h-16 w-auto object-contain mb-4"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/logo/logo-placeholder.svg';
+                  }}
+                />
               </Link>
               <p className="text-gray-400 mb-6">
                 Da oltre 20 anni costruiamo sicurezza, comfort e design per la tua
@@ -446,7 +471,7 @@ const NostriLavori: React.FC = () => {
                 <li>
                   <Link
                     to="/"
-                    className="text-gray-400 hover:text-red-700 transition-colors"
+                    className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                   >
                     Home
                   </Link>
@@ -454,7 +479,7 @@ const NostriLavori: React.FC = () => {
                 <li>
                   <Link
                     to="/#about"
-                    className="text-gray-400 hover:text-red-700 transition-colors"
+                    className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                   >
                     Chi Siamo
                   </Link>
@@ -462,7 +487,7 @@ const NostriLavori: React.FC = () => {
                 <li>
                   <Link
                     to="/lavori"
-                    className="text-red-600 font-semibold hover:text-red-500 transition-colors"
+                    className="text-brand-yellow-400 font-semibold hover:text-brand-yellow-300 transition-colors"
                   >
                     I Nostri Lavori
                   </Link>
@@ -470,7 +495,7 @@ const NostriLavori: React.FC = () => {
                 <li>
                   <Link
                     to="/#contact"
-                    className="text-gray-400 hover:text-red-700 transition-colors"
+                    className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                   >
                     Contatti
                   </Link>
@@ -478,7 +503,7 @@ const NostriLavori: React.FC = () => {
                 <li>
                   <Link
                     to="/app"
-                    className="text-red-700 hover:text-red-600 font-semibold transition-colors"
+                    className="text-brand-yellow-400 hover:text-brand-yellow-300 font-semibold transition-colors"
                   >
                     Area Riservata
                   </Link>
@@ -490,14 +515,14 @@ const NostriLavori: React.FC = () => {
               <h3 className="text-xl font-bold mb-4">Contatti</h3>
               <ul className="space-y-3 text-gray-400">
                 <li className="flex items-start gap-3">
-                  <MapPin size={18} className="mt-1 flex-shrink-0 text-red-600" />
+                  <MapPin size={18} className="mt-1 flex-shrink-0 text-brand-yellow-400" />
                   <span>Via Nettunense 235, Aprilia (RM)</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Phone size={18} className="mt-1 flex-shrink-0 text-red-600" />
+                  <Phone size={18} className="mt-1 flex-shrink-0 text-brand-yellow-400" />
                   <a
-                    href="tel:+393998760"
-                    className="hover:text-red-700 transition-colors"
+                    href="tel:+3939987060"
+                    className="hover:text-brand-yellow-400 transition-colors"
                   >
                     Tel: 393 998 7060
                   </a>
@@ -505,19 +530,19 @@ const NostriLavori: React.FC = () => {
                 <li className="flex items-start gap-3">
                   <MessageCircle
                     size={18}
-                    className="mt-1 flex-shrink-0 text-red-600"
+                    className="mt-1 flex-shrink-0 text-brand-yellow-400"
                   />
                   <a
-                    href="https://wa.me/393998760"
+                    href="https://wa.me/3939987060"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-red-700 transition-colors"
+                    className="hover:text-brand-yellow-400 transition-colors"
                   >
                     WhatsApp: 393 998 7060
                   </a>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Clock size={18} className="mt-1 flex-shrink-0 text-red-600" />
+                  <Clock size={18} className="mt-1 flex-shrink-0 text-brand-yellow-400" />
                   <div>
                     <p>Lun-Ven: 8:00 - 18:00</p>
                     <p>Sab: 8:00 - 12:00</p>

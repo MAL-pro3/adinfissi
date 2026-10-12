@@ -93,7 +93,7 @@ export default function Layout({ children, currentPage, onPageChange }: LayoutPr
           </div>
           <button
             onClick={DataResetService.confirmAndClearAllData}
-            className="w-full flex items-center px-3 py-2 mb-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+            className="w-full flex items-center px-3 py-2 mb-2 text-sm text-brand-yellow-700 hover:bg-brand-yellow-50 rounded-lg transition-colors duration-200"
           >
             <Trash2 className="w-4 h-4 mr-2" />
             Cancella Dati

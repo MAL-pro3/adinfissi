@@ -31,13 +31,13 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
             onClick={scrollToGallery}
-            className="bg-red-700 hover:bg-red-800 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+            className="bg-brand-yellow-400 hover:bg-brand-yellow-500 text-gray-900 px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
           >
             Scopri i nostri lavori
             <ArrowDown size={20} />
           </button>
           <a
-            href="https://wa.me/393998760"
+            href="https://wa.me/3939987060"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center gap-2"

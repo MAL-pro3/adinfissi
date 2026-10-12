@@ -8,7 +8,7 @@ export default function Contact() {
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             Vieni a Trovarci
           </h2>
-          <div className="w-24 h-1 bg-red-700 mx-auto mb-6"></div>
+          <div className="w-24 h-1 bg-brand-yellow-500 mx-auto mb-6"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Contattaci per un preventivo gratuito o visita il nostro showroom
           </p>
@@ -18,8 +18,8 @@ export default function Contact() {
           <div className="space-y-8">
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
               <div className="flex items-start gap-4">
-                <div className="bg-red-700 p-3 rounded-lg flex-shrink-0">
-                  <MapPin className="text-white" size={28} />
+                <div className="bg-brand-yellow-400 p-3 rounded-lg flex-shrink-0">
+                  <MapPin className="text-gray-900" size={28} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Indirizzo</h3>
@@ -33,12 +33,12 @@ export default function Contact() {
 
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
               <div className="flex items-start gap-4">
-                <div className="bg-red-700 p-3 rounded-lg flex-shrink-0">
-                  <Phone className="text-white" size={28} />
+                <div className="bg-brand-yellow-400 p-3 rounded-lg flex-shrink-0">
+                  <Phone className="text-gray-900" size={28} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Telefono</h3>
-                  <a href="tel:+393998760" className="text-gray-600 text-lg hover:text-red-700 transition-colors">
+                  <a href="tel:+3939987060" className="text-gray-600 text-lg hover:text-brand-yellow-700 transition-colors">
                     393 998 7060
                   </a>
                 </div>
@@ -47,16 +47,16 @@ export default function Contact() {
 
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
               <div className="flex items-start gap-4">
-                <div className="bg-red-700 p-3 rounded-lg flex-shrink-0">
-                  <MessageCircle className="text-white" size={28} />
+                <div className="bg-brand-yellow-400 p-3 rounded-lg flex-shrink-0">
+                  <MessageCircle className="text-gray-900" size={28} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">WhatsApp</h3>
                   <a
-                    href="https://wa.me/393998760"
+                    href="https://wa.me/3939987060"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 text-lg hover:text-red-700 transition-colors"
+                    className="text-gray-600 text-lg hover:text-brand-yellow-700 transition-colors"
                   >
                     Chatta con noi
                   </a>
@@ -66,8 +66,8 @@ export default function Contact() {
 
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
               <div className="flex items-start gap-4">
-                <div className="bg-red-700 p-3 rounded-lg flex-shrink-0">
-                  <Clock className="text-white" size={28} />
+                <div className="bg-brand-yellow-400 p-3 rounded-lg flex-shrink-0">
+                  <Clock className="text-gray-900" size={28} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">Orari di Apertura</h3>

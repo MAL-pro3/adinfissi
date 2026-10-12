@@ -57,7 +57,7 @@ function StatItem({ icon, value, label, prefix = '' }: StatItemProps) {
 
   return (
     <div ref={ref} className="text-center p-8 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow">
-      <div className="flex justify-center mb-4 text-red-700">
+      <div className="flex justify-center mb-4 text-brand-yellow-600">
         {icon}
       </div>
       <div className="text-5xl font-bold text-gray-900 mb-2">

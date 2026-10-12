@@ -15,6 +15,8 @@ import {
   Facebook,
 } from 'lucide-react';
 import { categorieLavori } from '../../data/lavori';
+import GoogleReviews from './GoogleReviews';
+import InstagramFeed from './InstagramFeed';
 
 const Landing: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,45 +33,49 @@ const Landing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="fixed top-0 left-0 right-0 bg-gray-900 text-white z-50 shadow-lg">
+      <header className="fixed top-0 left-0 right-0 bg-gray-900 text-white z-50 shadow-lg overflow-visible">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <Link to="/" className="flex items-center">
-              <div className="text-2xl font-bold tracking-tight">
-                <span className="text-white">AD</span>
-                <span className="text-red-700"> INFISSI</span>
-              </div>
+              <img
+                src="/logo/logo_adinfissi.svg"
+                alt="AD INFISSI"
+                className="h-[100px] w-auto object-contain my-auto"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/logo/logo-placeholder.svg';
+                }}
+              />
             </Link>
 
             <nav className="hidden md:flex space-x-8 items-center">
               <button
                 onClick={() => scrollToSection('hero')}
-                className="hover:text-red-700 transition-colors"
+                className="hover:text-brand-yellow-400 transition-colors"
               >
                 Home
               </button>
               <button
                 onClick={() => scrollToSection('about')}
-                className="hover:text-red-700 transition-colors"
+                className="hover:text-brand-yellow-400 transition-colors"
               >
                 Chi Siamo
               </button>
               <Link
                 to="/lavori"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="hover:text-red-700 transition-colors"
+                className="hover:text-brand-yellow-400 transition-colors"
               >
                 I Nostri Lavori
               </Link>
               <button
                 onClick={() => scrollToSection('contact')}
-                className="hover:text-red-700 transition-colors"
+                className="hover:text-brand-yellow-400 transition-colors"
               >
                 Contatti
               </button>
               <Link
                 to="/app"
-                className="text-red-700 hover:text-red-600 font-semibold transition-colors"
+                className="text-brand-yellow-400 hover:text-brand-yellow-300 font-semibold transition-colors"
               >
                 Area Riservata
               </Link>
@@ -89,33 +95,33 @@ const Landing: React.FC = () => {
             <div className="px-4 pt-2 pb-4 space-y-2">
               <button
                 onClick={() => scrollToSection('hero')}
-                className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+                className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
               >
                 Home
               </button>
               <button
                 onClick={() => scrollToSection('about')}
-                className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+                className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
               >
                 Chi Siamo
               </button>
               <Link
                 to="/lavori"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+                className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
               >
                 I Nostri Lavori
               </Link>
               <button
                 onClick={() => scrollToSection('contact')}
-                className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+                className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
               >
                 Contatti
               </button>
               <Link
                 to="/app"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-left py-2 text-red-700 font-semibold"
+                className="block w-full text-left py-2 text-brand-yellow-400 font-semibold"
               >
                 Area Riservata
               </Link>
@@ -137,8 +143,8 @@ const Landing: React.FC = () => {
         />
 
         <div className="relative z-10 text-center text-white max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            AD INFISSI srl
+          <h1 className="font-brand font-black text-5xl sm:text-6xl lg:text-7xl tracking-[0.08em] text-white mb-6 leading-tight">
+            AD INFISSI<span className="font-light font-sans tracking-normal text-4xl sm:text-5xl lg:text-6xl opacity-90 ml-3">srl</span>
           </h1>
           <p className="text-xl sm:text-2xl lg:text-3xl mb-4 font-light">
             Da 20 anni costruiamo sicurezza, comfort e design
@@ -150,13 +156,13 @@ const Landing: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               to="/lavori"
-              className="bg-red-700 hover:bg-red-800 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+              className="bg-brand-yellow-400 hover:bg-brand-yellow-500 text-gray-900 px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
             >
               Scopri i nostri lavori
               <ArrowRight size={20} />
             </Link>
             <a
-              href="https://wa.me/393998760"
+              href="https://wa.me/3939987060"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
@@ -196,13 +202,13 @@ const Landing: React.FC = () => {
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
               Chi Siamo
             </h2>
-            <div className="w-24 h-1 bg-red-700 mx-auto"></div>
+            <div className="w-24 h-1 bg-brand-yellow-500 mx-auto"></div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <p className="text-lg text-gray-700 leading-relaxed">
-                <strong className="text-red-700">AD INFISSI srl</strong> nasce oltre 20 anni fa
+                <strong className="text-brand-yellow-700">AD INFISSI srl</strong> nasce oltre 20 anni fa
                 ad Aprilia (RM), in via Nettunense 235.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
@@ -224,8 +230,8 @@ const Landing: React.FC = () => {
             <div className="grid grid-cols-1 gap-6">
               <div className="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-start gap-4">
-                  <div className="bg-red-700 p-3 rounded-lg">
-                    <Building2 className="text-white" size={32} />
+                  <div className="bg-brand-yellow-400 p-3 rounded-lg">
+                    <Building2 className="text-gray-900" size={32} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -241,8 +247,8 @@ const Landing: React.FC = () => {
 
               <div className="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-start gap-4">
-                  <div className="bg-red-700 p-3 rounded-lg">
-                    <Users className="text-white" size={32} />
+                  <div className="bg-brand-yellow-400 p-3 rounded-lg">
+                    <Users className="text-gray-900" size={32} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -258,8 +264,8 @@ const Landing: React.FC = () => {
 
               <div className="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
                 <div className="flex items-start gap-4">
-                  <div className="bg-red-700 p-3 rounded-lg">
-                    <Award className="text-white" size={32} />
+                  <div className="bg-brand-yellow-400 p-3 rounded-lg">
+                    <Award className="text-gray-900" size={32} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -283,7 +289,7 @@ const Landing: React.FC = () => {
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
               I Nostri Lavori
             </h2>
-            <div className="w-24 h-1 bg-red-700 mx-auto mb-6"></div>
+            <div className="w-24 h-1 bg-brand-yellow-500 mx-auto mb-6"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Esplora le nostre categorie e scopri tutti i progetti realizzati
             </p>
@@ -296,7 +302,7 @@ const Landing: React.FC = () => {
                 to={`/lavori?cat=${cat.key}`}
                 onMouseEnter={() => setSelectedCategoria(cat.key)}
                 onMouseLeave={() => setSelectedCategoria(null)}
-                className="group relative overflow-hidden rounded-xl shadow-lg aspect-[3/4] block focus:outline-none focus:ring-4 focus:ring-red-500/40 transition-all duration-300"
+                className="group relative overflow-hidden rounded-xl shadow-lg aspect-[3/4] block focus:outline-none focus:ring-4 focus:ring-brand-yellow-500/40 transition-all duration-300"
               >
                 <img
                   src={cat.copertina}
@@ -314,14 +320,14 @@ const Landing: React.FC = () => {
                 />
 
                 <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
-                  <div className="w-12 h-1 bg-red-600 mb-4 transition-all duration-500 group-hover:w-20" />
+                  <div className="w-12 h-1 bg-brand-yellow-500 mb-4 transition-all duration-500 group-hover:w-20" />
                   <h3 className="text-2xl sm:text-3xl font-bold mb-2 uppercase tracking-wide">
                     {cat.nome}
                   </h3>
                   <p className="text-sm text-gray-200 mb-4 line-clamp-2">
                     {cat.descrizione}
                   </p>
-                  <div className="flex items-center gap-2 text-white font-semibold text-sm group-hover:text-red-500 transition-colors">
+                  <div className="flex items-center gap-2 text-white font-semibold text-sm group-hover:text-brand-yellow-400 transition-colors">
                     Vedi tutti i lavori
                     <ArrowRight
                       size={16}
@@ -336,7 +342,7 @@ const Landing: React.FC = () => {
           <div className="mt-16 text-center">
             <Link
               to="/lavori"
-              className="inline-flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 bg-brand-yellow-400 hover:bg-brand-yellow-500 text-gray-900 px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl"
             >
               Visualizza galleria completa
               <ArrowRight size={20} />
@@ -345,13 +351,16 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
+      <GoogleReviews />
+      <InstagramFeed />
+
       <section id="contact" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
               Vieni a Trovarci
             </h2>
-            <div className="w-24 h-1 bg-red-700 mx-auto mb-6"></div>
+            <div className="w-24 h-1 bg-brand-yellow-500 mx-auto mb-6"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Contattaci per un preventivo gratuito o visita il nostro showroom
             </p>
@@ -361,8 +370,8 @@ const Landing: React.FC = () => {
             <div className="space-y-8">
               <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                 <div className="flex items-start gap-4">
-                  <div className="bg-red-700 p-3 rounded-lg flex-shrink-0">
-                    <MapPin className="text-white" size={28} />
+                  <div className="bg-brand-yellow-400 p-3 rounded-lg flex-shrink-0">
+                    <MapPin className="text-gray-900" size={28} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Indirizzo</h3>
@@ -377,14 +386,14 @@ const Landing: React.FC = () => {
 
               <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                 <div className="flex items-start gap-4">
-                  <div className="bg-red-700 p-3 rounded-lg flex-shrink-0">
-                    <Phone className="text-white" size={28} />
+                  <div className="bg-brand-yellow-400 p-3 rounded-lg flex-shrink-0">
+                    <Phone className="text-gray-900" size={28} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Telefono</h3>
                     <a
-                      href="tel:+393998760"
-                      className="text-gray-600 text-lg hover:text-red-700 transition-colors"
+                      href="tel:+3939987060"
+                      className="text-gray-600 text-lg hover:text-brand-yellow-700 transition-colors"
                     >
                       393 998 7060
                     </a>
@@ -394,16 +403,16 @@ const Landing: React.FC = () => {
 
               <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                 <div className="flex items-start gap-4">
-                  <div className="bg-red-700 p-3 rounded-lg flex-shrink-0">
-                    <MessageCircle className="text-white" size={28} />
+                  <div className="bg-brand-yellow-400 p-3 rounded-lg flex-shrink-0">
+                    <MessageCircle className="text-gray-900" size={28} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">WhatsApp</h3>
                     <a
-                      href="https://wa.me/393998760"
+                      href="https://wa.me/3939987060"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-600 text-lg hover:text-red-700 transition-colors"
+                      className="text-gray-600 text-lg hover:text-brand-yellow-700 transition-colors"
                     >
                       393 998 7060
                     </a>
@@ -413,8 +422,8 @@ const Landing: React.FC = () => {
 
               <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                 <div className="flex items-start gap-4">
-                  <div className="bg-red-700 p-3 rounded-lg flex-shrink-0">
-                    <Clock className="text-white" size={28} />
+                  <div className="bg-brand-yellow-400 p-3 rounded-lg flex-shrink-0">
+                    <Clock className="text-gray-900" size={28} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Orari</h3>
@@ -497,7 +506,7 @@ const Landing: React.FC = () => {
                 <div className="mt-6 pt-6 border-t border-gray-200">
                   <div className="flex flex-col sm:flex-row gap-4">
                     <a
-                      href="https://wa.me/393998760?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20servizi"
+                      href="https://wa.me/3939987060?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20servizi"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
@@ -506,8 +515,8 @@ const Landing: React.FC = () => {
                       Scrivici su WhatsApp
                     </a>
                     <a
-                      href="tel:+393998760"
-                      className="flex-1 bg-red-700 hover:bg-red-800 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                      href="tel:+3939987060"
+                      className="flex-1 bg-brand-yellow-400 hover:bg-brand-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                     >
                       <Phone size={20} />
                       Chiamaci Ora
@@ -525,12 +534,16 @@ const Landing: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
             <div>
               <Link to="/" className="inline-block">
-                <div className="text-3xl font-bold mb-4">
-                  <span className="text-white">AD</span>
-                  <span className="text-red-700"> INFISSI</span>
-                </div>
+                <img
+                  src="/logo/logo_adinfissi.svg"
+                  alt="AD INFISSI"
+                  className="h-16 w-auto object-contain"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/logo/logo-placeholder.svg';
+                  }}
+                />
               </Link>
-              <p className="text-gray-400 mb-6">
+              <p className="text-gray-400 mb-6 mt-4">
                 Da oltre 20 anni costruiamo sicurezza, comfort e design per la tua casa e
                 la tua azienda.
               </p>
@@ -560,7 +573,7 @@ const Landing: React.FC = () => {
                 <li>
                   <button
                     onClick={() => scrollToSection('hero')}
-                    className="text-gray-400 hover:text-red-700 transition-colors"
+                    className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                   >
                     Home
                   </button>
@@ -568,7 +581,7 @@ const Landing: React.FC = () => {
                 <li>
                   <button
                     onClick={() => scrollToSection('about')}
-                    className="text-gray-400 hover:text-red-700 transition-colors"
+                    className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                   >
                     Chi Siamo
                   </button>
@@ -577,7 +590,7 @@ const Landing: React.FC = () => {
                   <Link
                     to="/lavori"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-gray-400 hover:text-red-700 transition-colors"
+                    className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                   >
                     I Nostri Lavori
                   </Link>
@@ -585,7 +598,7 @@ const Landing: React.FC = () => {
                 <li>
                   <button
                     onClick={() => scrollToSection('contact')}
-                    className="text-gray-400 hover:text-red-700 transition-colors"
+                    className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                   >
                     Contatti
                   </button>
@@ -593,7 +606,7 @@ const Landing: React.FC = () => {
                 <li>
                   <Link
                     to="/app"
-                    className="text-red-700 hover:text-red-600 font-semibold transition-colors"
+                    className="text-brand-yellow-400 hover:text-brand-yellow-300 font-semibold transition-colors"
                   >
                     Area Riservata
                   </Link>
@@ -608,18 +621,18 @@ const Landing: React.FC = () => {
                 <li>Aprilia (RM)</li>
                 <li>
                   <a
-                    href="tel:+393998760"
-                    className="hover:text-red-700 transition-colors"
+                    href="tel:+3939987060"
+                    className="hover:text-brand-yellow-400 transition-colors"
                   >
                     Tel: 393 998 7060
                   </a>
                 </li>
                 <li>
                   <a
-                    href="https://wa.me/393998760"
+                    href="https://wa.me/3939987060"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-red-700 transition-colors"
+                    className="hover:text-brand-yellow-400 transition-colors"
                   >
                     WhatsApp: 393 998 7060
                   </a>

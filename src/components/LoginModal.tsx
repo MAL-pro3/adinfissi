@@ -36,8 +36,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         </button>
 
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-700 rounded-full mb-4">
-            <Lock className="text-white" size={32} />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-yellow-400 rounded-full mb-4">
+            <Lock className="text-gray-900" size={32} />
           </div>
           <h2 className="text-3xl font-bold text-gray-900">Area Riservata</h2>
           <p className="text-gray-600 mt-2">Accesso riservato alle segretarie</p>
@@ -56,7 +56,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent outline-none transition-all"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-yellow-400 focus:border-transparent outline-none transition-all"
                 placeholder="Inserisci username"
               />
             </div>
@@ -74,7 +74,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent outline-none transition-all"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-yellow-400 focus:border-transparent outline-none transition-all"
                 placeholder="Inserisci password"
               />
             </div>
@@ -88,7 +88,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
           <button
             type="submit"
-            className="w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded-lg font-semibold transition-colors shadow-lg hover:shadow-xl"
+            className="w-full bg-brand-yellow-400 hover:bg-brand-yellow-500 text-gray-900 py-3 rounded-lg font-semibold transition-colors shadow-lg hover:shadow-xl"
           >
             Accedi
           </button>

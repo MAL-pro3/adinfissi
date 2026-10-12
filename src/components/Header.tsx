@@ -17,44 +17,48 @@ export default function Header({ onLoginClick }: HeaderProps) {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-gray-900 text-white z-50 shadow-lg">
+    <header className="fixed top-0 left-0 right-0 bg-gray-900 text-white z-50 shadow-lg overflow-visible">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
-            <div className="text-2xl font-bold tracking-tight">
-              <span className="text-white">AD</span>
-              <span className="text-red-700"> INFISSI</span>
-            </div>
+            <img
+              src="/logo/logo_adinfissi.svg"
+              alt="AD INFISSI"
+              className="h-[100px] w-auto object-contain my-auto"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = '/logo/logo-placeholder.svg';
+              }}
+            />
           </div>
 
           <nav className="hidden md:flex space-x-8">
             <button
               onClick={() => scrollToSection('hero')}
-              className="hover:text-red-700 transition-colors"
+              className="hover:text-brand-yellow-400 transition-colors"
             >
               Home
             </button>
             <button
               onClick={() => scrollToSection('about')}
-              className="hover:text-red-700 transition-colors"
+              className="hover:text-brand-yellow-400 transition-colors"
             >
               Chi Siamo
             </button>
             <button
               onClick={() => scrollToSection('gallery')}
-              className="hover:text-red-700 transition-colors"
+              className="hover:text-brand-yellow-400 transition-colors"
             >
               I Nostri Lavori
             </button>
             <button
               onClick={() => scrollToSection('contact')}
-              className="hover:text-red-700 transition-colors"
+              className="hover:text-brand-yellow-400 transition-colors"
             >
               Contatti
             </button>
             <button
               onClick={onLoginClick}
-              className="text-red-700 hover:text-red-600 font-semibold transition-colors"
+              className="text-brand-yellow-400 hover:text-brand-yellow-300 font-semibold transition-colors"
             >
               Area Riservata
             </button>
@@ -74,31 +78,31 @@ export default function Header({ onLoginClick }: HeaderProps) {
           <div className="px-4 pt-2 pb-4 space-y-2">
             <button
               onClick={() => scrollToSection('hero')}
-              className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+              className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
             >
               Home
             </button>
             <button
               onClick={() => scrollToSection('about')}
-              className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+              className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
             >
               Chi Siamo
             </button>
             <button
               onClick={() => scrollToSection('gallery')}
-              className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+              className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
             >
               I Nostri Lavori
             </button>
             <button
               onClick={() => scrollToSection('contact')}
-              className="block w-full text-left py-2 hover:text-red-700 transition-colors"
+              className="block w-full text-left py-2 hover:text-brand-yellow-400 transition-colors"
             >
               Contatti
             </button>
             <button
               onClick={onLoginClick}
-              className="block w-full text-left py-2 text-red-700 font-semibold"
+              className="block w-full text-left py-2 text-brand-yellow-400 font-semibold"
             >
               Area Riservata
             </button>

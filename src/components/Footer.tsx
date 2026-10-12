@@ -17,10 +17,14 @@ export default function Footer({ onLoginClick }: FooterProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div>
-            <div className="text-3xl font-bold mb-4">
-              <span className="text-white">AD</span>
-              <span className="text-red-700"> INFISSI</span>
-            </div>
+            <img
+              src="/logo/logo_adinfissi.svg"
+              alt="AD INFISSI"
+              className="h-16 w-auto object-contain mb-4"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = '/logo/logo-placeholder.svg';
+              }}
+            />
             <p className="text-gray-400 mb-6">
               Da oltre 20 anni costruiamo sicurezza, comfort e design per la tua casa e la tua azienda.
             </p>
@@ -50,7 +54,7 @@ export default function Footer({ onLoginClick }: FooterProps) {
               <li>
                 <button
                   onClick={() => scrollToSection('hero')}
-                  className="text-gray-400 hover:text-red-700 transition-colors"
+                  className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                 >
                   Home
                 </button>
@@ -58,7 +62,7 @@ export default function Footer({ onLoginClick }: FooterProps) {
               <li>
                 <button
                   onClick={() => scrollToSection('about')}
-                  className="text-gray-400 hover:text-red-700 transition-colors"
+                  className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                 >
                   Chi Siamo
                 </button>
@@ -66,7 +70,7 @@ export default function Footer({ onLoginClick }: FooterProps) {
               <li>
                 <button
                   onClick={() => scrollToSection('gallery')}
-                  className="text-gray-400 hover:text-red-700 transition-colors"
+                  className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                 >
                   I Nostri Lavori
                 </button>
@@ -74,7 +78,7 @@ export default function Footer({ onLoginClick }: FooterProps) {
               <li>
                 <button
                   onClick={() => scrollToSection('contact')}
-                  className="text-gray-400 hover:text-red-700 transition-colors"
+                  className="text-gray-400 hover:text-brand-yellow-400 transition-colors"
                 >
                   Contatti
                 </button>
@@ -82,7 +86,7 @@ export default function Footer({ onLoginClick }: FooterProps) {
               <li>
                 <button
                   onClick={onLoginClick}
-                  className="text-red-700 hover:text-red-600 font-semibold transition-colors"
+                  className="text-brand-yellow-400 hover:text-brand-yellow-300 font-semibold transition-colors"
                 >
                   Area Riservata
                 </button>
@@ -96,16 +100,16 @@ export default function Footer({ onLoginClick }: FooterProps) {
               <li>Via Nettunense 235</li>
               <li>Aprilia (RM)</li>
               <li>
-                <a href="tel:+393998760" className="hover:text-red-700 transition-colors">
+                <a href="tel:+3939987060" className="hover:text-brand-yellow-400 transition-colors">
                   Tel: 393 998 7060
                 </a>
               </li>
               <li>
                 <a
-                  href="https://wa.me/393998760"
+                  href="https://wa.me/3939987060"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-red-700 transition-colors"
+                  className="hover:text-brand-yellow-400 transition-colors"
                 >
                   WhatsApp: 393 998 7060
                 </a>

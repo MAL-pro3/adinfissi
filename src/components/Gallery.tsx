@@ -68,7 +68,7 @@ export default function Gallery() {
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             I Nostri Lavori
           </h2>
-          <div className="w-24 h-1 bg-red-700 mx-auto mb-6"></div>
+          <div className="w-24 h-1 bg-brand-yellow-500 mx-auto mb-6"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Scopri alcuni dei progetti realizzati con passione e professionalità
           </p>
@@ -87,7 +87,7 @@ export default function Gallery() {
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                <span className="text-red-500 text-sm font-semibold mb-1">{image.category}</span>
+                <span className="text-brand-yellow-400 text-sm font-semibold mb-1">{image.category}</span>
                 <h3 className="text-white font-bold text-lg">{image.title}</h3>
               </div>
             </div>
@@ -99,21 +99,21 @@ export default function Gallery() {
         <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
           <button
             onClick={() => setLightboxOpen(false)}
-            className="absolute top-4 right-4 text-white hover:text-red-500 transition-colors"
+            className="absolute top-4 right-4 text-white hover:text-brand-yellow-400 transition-colors"
           >
             <X size={40} />
           </button>
 
           <button
             onClick={prevImage}
-            className="absolute left-4 text-white hover:text-red-500 transition-colors"
+            className="absolute left-4 text-white hover:text-brand-yellow-400 transition-colors"
           >
             <ChevronLeft size={48} />
           </button>
 
           <button
             onClick={nextImage}
-            className="absolute right-4 text-white hover:text-red-500 transition-colors"
+            className="absolute right-4 text-white hover:text-brand-yellow-400 transition-colors"
           >
             <ChevronRight size={48} />
           </button>
@@ -125,7 +125,7 @@ export default function Gallery() {
               className="max-w-full max-h-[80vh] object-contain rounded-lg"
             />
             <div className="text-center mt-4">
-              <span className="text-red-500 text-sm font-semibold">
+              <span className="text-brand-yellow-400 text-sm font-semibold">
                 {galleryImages[currentIndex].category}
               </span>
               <h3 className="text-white text-2xl font-bold mt-2">

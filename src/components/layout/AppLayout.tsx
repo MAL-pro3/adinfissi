@@ -89,7 +89,7 @@ const AppLayout: React.FC = () => {
             </Link>
             <button
               onClick={handleLogout}
-              className="flex items-center w-full px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg"
+              className="flex items-center w-full px-3 py-2 text-sm font-medium text-brand-yellow-700 hover:bg-brand-yellow-50 rounded-lg"
             >
               <LogOut className="mr-3 h-5 w-5" />
               Logout
@@ -137,7 +137,7 @@ const AppLayout: React.FC = () => {
             </Link>
             <button
               onClick={handleLogout}
-              className="flex items-center w-full px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg"
+              className="flex items-center w-full px-3 py-2 text-sm font-medium text-brand-yellow-700 hover:bg-brand-yellow-50 rounded-lg"
             >
               <LogOut className="mr-3 h-5 w-5" />
               Logout
@@ -160,7 +160,7 @@ const AppLayout: React.FC = () => {
             <h1 className="text-lg font-semibold text-gray-900">AD Infissi</h1>
             <button
               onClick={handleLogout}
-              className="text-gray-400 hover:text-red-600"
+              className="text-gray-400 hover:text-brand-yellow-700"
             >
               <LogOut className="h-6 w-6" />
             </button>

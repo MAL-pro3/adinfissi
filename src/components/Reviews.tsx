@@ -41,7 +41,7 @@ export default function Reviews() {
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             Cosa Dicono i Nostri Clienti
           </h2>
-          <div className="w-24 h-1 bg-red-700 mx-auto mb-6"></div>
+          <div className="w-24 h-1 bg-brand-yellow-500 mx-auto mb-6"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             La nostra miglior pubblicità sono i clienti soddisfatti
           </p>
@@ -100,7 +100,7 @@ export default function Reviews() {
             href="https://www.google.com/maps/search/AD+INFISSI+srl+Aprilia"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-brand-yellow-400 hover:bg-brand-yellow-500 text-gray-900 px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl"
           >
             Leggi tutte le recensioni su Google
             <ExternalLink size={20} />

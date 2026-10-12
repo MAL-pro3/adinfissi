@@ -8,13 +8,13 @@ export default function About() {
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             Chi Siamo
           </h2>
-          <div className="w-24 h-1 bg-red-700 mx-auto"></div>
+          <div className="w-24 h-1 bg-brand-yellow-500 mx-auto"></div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <p className="text-lg text-gray-700 leading-relaxed">
-              <strong className="text-red-700">AD INFISSI srl</strong> nasce oltre 20 anni fa ad Aprilia (RM), in via Nettunense 235.
+              <strong className="text-brand-yellow-700">AD INFISSI srl</strong> nasce oltre 20 anni fa ad Aprilia (RM), in via Nettunense 235.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
               Specializzati nella produzione e installazione di <strong>infissi, cancelli, tende da sole e pergolati in alluminio</strong>, offriamo soluzioni innovative e su misura per ogni esigenza.
@@ -30,8 +30,8 @@ export default function About() {
           <div className="grid grid-cols-1 gap-6">
             <div className="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
               <div className="flex items-start gap-4">
-                <div className="bg-red-700 p-3 rounded-lg">
-                  <Building2 className="text-white" size={32} />
+                <div className="bg-brand-yellow-400 p-3 rounded-lg">
+                  <Building2 className="text-gray-900" size={32} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -46,8 +46,8 @@ export default function About() {
 
             <div className="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
               <div className="flex items-start gap-4">
-                <div className="bg-red-700 p-3 rounded-lg">
-                  <Users className="text-white" size={32} />
+                <div className="bg-brand-yellow-400 p-3 rounded-lg">
+                  <Users className="text-gray-900" size={32} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -62,8 +62,8 @@ export default function About() {
 
             <div className="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
               <div className="flex items-start gap-4">
-                <div className="bg-red-700 p-3 rounded-lg">
-                  <Award className="text-white" size={32} />
+                <div className="bg-brand-yellow-400 p-3 rounded-lg">
+                  <Award className="text-gray-900" size={32} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
