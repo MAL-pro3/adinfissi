@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './contexts/AuthContext';
 import Landing from './components/website/Landing';
 import NostriLavori from './components/website/NostriLavori';
+import GestioneSitoWeb from './components/website/GestioneSitoWeb';
 import AppLayout from './components/layout/AppLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './components/Login';
@@ -23,6 +24,14 @@ function App() {
           {/* Public website routes */}
           <Route path="/" element={<Landing />} />
           <Route path="/lavori" element={<NostriLavori />} />
+          <Route
+            path="/gestionesitoweb"
+            element={
+              <ProtectedRoute>
+                <GestioneSitoWeb />
+              </ProtectedRoute>
+            }
+          />
           
           {/* Application routes */}
           <Route path="/app/login" element={<Login />} />

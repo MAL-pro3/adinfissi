@@ -8,18 +8,37 @@ import {
   Building2,
   Users,
   Award,
+  Star,
+  Hammer,
   MapPin,
   Phone,
   Clock,
   Instagram,
   Facebook,
 } from 'lucide-react';
-import { categorieLavori } from '../../data/lavori';
+import { useSiteImages } from '../../hooks/useSiteImages';
 import GoogleReviews from './GoogleReviews';
 import InstagramFeed from './InstagramFeed';
+import Counter from './Counter';
+import HeroBackground from './HeroBackground';
+
+// Logo TikTok (lucide-react non ha l'icona ufficiale)
+const TiktokIcon = ({ size = 24, className = '' }: { size?: number; className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    width={size}
+    height={size}
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.1z" />
+  </svg>
+);
 
 const Landing: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { heroImages, categorie } = useSiteImages();
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -134,13 +153,7 @@ const Landing: React.FC = () => {
         id="hero"
         className="relative h-screen flex items-center justify-center overflow-hidden"
       >
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(https://images.pexels.com/photos/1643389/pexels-photo-1643389.jpeg?auto=compress&cs=tinysrgb&w=1920)',
-          }}
-        />
+        <HeroBackground images={heroImages} />
 
         <div className="relative z-10 text-center text-white max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="font-brand font-black text-5xl sm:text-6xl lg:text-7xl tracking-[0.08em] text-white mb-6 leading-tight">
@@ -280,6 +293,57 @@ const Landing: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Contatori animati */}
+          <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-yellow-400 rounded-xl mb-4">
+                <Users className="text-gray-900" size={28} />
+              </div>
+              <div className="text-4xl sm:text-5xl font-black text-gray-900 font-brand mb-1">
+                <Counter end={1000} suffix="+" duration={2200} />
+              </div>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">
+                Clienti Soddisfatti
+              </p>
+            </div>
+
+            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-yellow-400 rounded-xl mb-4">
+                <Star className="text-gray-900" size={28} />
+              </div>
+              <div className="text-4xl sm:text-5xl font-black text-gray-900 font-brand mb-1">
+                <Counter end={327} suffix="+" duration={2000} />
+              </div>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">
+                Recensioni Google
+              </p>
+            </div>
+
+            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-yellow-400 rounded-xl mb-4">
+                <Hammer className="text-gray-900" size={28} />
+              </div>
+              <div className="text-4xl sm:text-5xl font-black text-gray-900 font-brand mb-1">
+                <Counter end={10000} suffix="+" duration={2500} />
+              </div>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">
+                Lavori Realizzati
+              </p>
+            </div>
+
+            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-yellow-400 rounded-xl mb-4">
+                <Award className="text-gray-900" size={28} />
+              </div>
+              <div className="text-4xl sm:text-5xl font-black text-gray-900 font-brand mb-1">
+                <Counter end={20} suffix="+" duration={1800} />
+              </div>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">
+                Anni di Esperienza
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -296,7 +360,7 @@ const Landing: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categorieLavori.map((cat) => (
+            {categorie.map((cat) => (
               <Link
                 key={cat.key}
                 to={`/lavori?cat=${cat.key}`}
@@ -455,6 +519,14 @@ const Landing: React.FC = () => {
                   >
                     <Facebook size={24} className="text-white" />
                   </a>
+                  <a
+                    href="https://www.tiktok.com/@adinfissi"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-black p-3 rounded-lg hover:shadow-lg transition-all"
+                  >
+                    <TiktokIcon size={24} className="text-white" />
+                  </a>
                 </div>
               </div>
             </div>
@@ -563,6 +635,14 @@ const Landing: React.FC = () => {
                   className="bg-blue-600 p-3 rounded-lg hover:shadow-lg transition-all"
                 >
                   <Facebook size={24} />
+                </a>
+                <a
+                  href="https://www.tiktok.com/@adinfissi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-black p-3 rounded-lg hover:shadow-lg transition-all"
+                >
+                  <TiktokIcon size={24} />
                 </a>
               </div>
             </div>

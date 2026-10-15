@@ -14,30 +14,33 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import {
-  categorieLavori,
-  getCategoriaByKey,
   type FotoLavoro,
   type LavoroCategoria,
 } from '../../data/lavori';
+import { useSiteImages } from '../../hooks/useSiteImages';
 
 type FiltroCategoria = 'TUTTE' | LavoroCategoria;
 
-const FILTRI: { key: FiltroCategoria; label: string }[] = [
-  { key: 'TUTTE', label: 'Tutti i lavori' },
-  ...categorieLavori.map((c) => ({ key: c.key as LavoroCategoria, label: c.nome })),
-];
-
 const NostriLavori: React.FC = () => {
+  const { categorie } = useSiteImages();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const paramCat = searchParams.get('cat');
 
+  const filtri = useMemo(
+    () => [
+      { key: 'TUTTE' as FiltroCategoria, label: 'Tutti i lavori' },
+      ...categorie.map((c) => ({ key: c.key as LavoroCategoria, label: c.nome })),
+    ],
+    [categorie],
+  );
+
   const initialFiltro: FiltroCategoria = useMemo(() => {
     if (!paramCat) return 'TUTTE';
-    const match = FILTRI.find((f) => f.key === paramCat.toUpperCase());
+    const match = filtri.find((f) => f.key === paramCat.toUpperCase());
     return (match?.key as FiltroCategoria) || 'TUTTE';
-  }, [paramCat]);
+  }, [paramCat, filtri]);
 
   const [filtro, setFiltro] = useState<FiltroCategoria>(initialFiltro);
 
@@ -78,16 +81,17 @@ const NostriLavori: React.FC = () => {
 
   const fotoVisibili: { foto: FotoLavoro; categoriaNome: string }[] = useMemo(() => {
     if (filtro === 'TUTTE') {
-      return categorieLavori.flatMap((c) =>
+      return categorie.flatMap((c) =>
         c.foto.map((f) => ({ foto: f, categoriaNome: c.nome })),
       );
     }
-    const cat = getCategoriaByKey(filtro);
+    const cat = categorie.find((c) => c.key === filtro);
     if (!cat) return [];
     return cat.foto.map((f) => ({ foto: f, categoriaNome: cat.nome }));
-  }, [filtro]);
+  }, [filtro, categorie]);
 
-  const categoriaAttiva = filtro !== 'TUTTE' ? getCategoriaByKey(filtro) : undefined;
+  const categoriaAttiva =
+    filtro !== 'TUTTE' ? categorie.find((c) => c.key === filtro) : undefined;
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -259,7 +263,7 @@ const NostriLavori: React.FC = () => {
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3">
-            {categorieLavori.map((c) => (
+            {categorie.map((c) => (
               <button
                 key={c.key}
                 onClick={() => cambiaFiltro(c.key)}
@@ -281,7 +285,7 @@ const NostriLavori: React.FC = () => {
           {/* Barra filtri categorie: resta sticky sotto l'header mentre si scrolla */}
           <div className="sticky top-20 z-30 bg-gray-50 pt-3 pb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             <div className="flex flex-wrap gap-2 sm:gap-3 p-1 bg-white rounded-xl shadow-sm border border-gray-200 inline-flex">
-              {FILTRI.map((f) => (
+              {filtri.map((f) => (
                 <button
                   key={f.key}
                   onClick={() => cambiaFiltro(f.key)}

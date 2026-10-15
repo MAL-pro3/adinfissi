@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { supabase } from '../services/supabase';
-import { User as AuthUser } from '@supabase/supabase-js';
+import { User as SupabaseAuthUser, Session } from '@supabase/supabase-js';
 
 interface User {
   id: string;
@@ -11,7 +11,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  authUser: AuthUser | null;
+  authUser: SupabaseAuthUser | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   isLoading: boolean;
@@ -19,110 +19,128 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Rete di sicurezza: oltre questo tempo l'app NON resta mai bloccata in caricamento.
+const SESSION_SAFETY_TIMEOUT_MS = 8000;
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [authUser, setAuthUser] = useState<SupabaseAuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // ==============================================================
-  // 🔹 Effetto principale: gestione sessione persistente e refresh
+  // 🔹 Recupera profilo utente da Supabase (tabella profiles)
+  //    - Non solleva mai eccezioni: in caso di errore usa un profilo
+  //      minimo derivato dall'utente autenticato, così l'utente non
+  //      resta bloccato fuori dall'area riservata.
+  // ==============================================================
+  const fetchUserProfile = useCallback(async (authenticatedUser: SupabaseAuthUser): Promise<void> => {
+    const fallbackUser: User = {
+      id: authenticatedUser.id,
+      email: authenticatedUser.email ?? '',
+      full_name:
+        (authenticatedUser.user_metadata?.full_name as string | undefined) ??
+        authenticatedUser.email ??
+        '',
+      role: 'user',
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', authenticatedUser.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Errore fetch profilo:', error.message);
+        setUser(fallbackUser);
+        return;
+      }
+
+      setUser((data as User) ?? fallbackUser);
+    } catch (err) {
+      console.error('Eccezione fetch profilo:', err);
+      setUser(fallbackUser);
+    }
+  }, []);
+
+  // Applica la sessione corrente (utente + profilo)
+  const applySession = useCallback(
+    async (session: Session | null): Promise<void> => {
+      setAuthUser(session?.user ?? null);
+      if (session?.user) {
+        await fetchUserProfile(session.user);
+      } else {
+        setUser(null);
+      }
+    },
+    [fetchUserProfile],
+  );
+
+  // ==============================================================
+  // 🔹 Effetto principale: ripristino sessione persistente
+  //
+  // onAuthStateChange è l'UNICA fonte di verità: emette INITIAL_SESSION
+  // all'avvio, poi SIGNED_IN / TOKEN_REFRESHED / SIGNED_OUT.
+  // In questo modo NON chiamiamo più supabase.auth.getSession() in
+  // parallelo (era questa la causa del blocco infinito in StrictMode).
   // ==============================================================
   useEffect(() => {
     let mounted = true;
 
-    const loadSession = async () => {
-      setIsLoading(true);
+    const safetyTimer = window.setTimeout(() => {
+      if (mounted) setIsLoading(false);
+    }, SESSION_SAFETY_TIMEOUT_MS);
 
-      // ✅ Avvia il refresh automatico del token
-      supabase.auth.startAutoRefresh();
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!mounted) return;
 
-      const { data, error } = await supabase.auth.getSession();
-
-      if (error) {
-        console.error('Errore nel recupero sessione:', error);
-        if (mounted) setIsLoading(false);
-        return;
+      if (
+        event === 'INITIAL_SESSION' ||
+        event === 'SIGNED_IN' ||
+        event === 'TOKEN_REFRESHED' ||
+        event === 'USER_UPDATED'
+      ) {
+        // ⚠️ Il callback di onAuthStateChange viene eseguito mentre Supabase
+        // tiene il lock interno: NON va reso async. Spostiamo il lavoro
+        // (chiamate di rete) fuori dal callback con setTimeout.
+        window.setTimeout(() => {
+          if (!mounted) return;
+          void applySession(session).finally(() => {
+            if (mounted) setIsLoading(false);
+          });
+        }, 0);
       }
 
-      const session = data.session;
-
-      if (session?.user) {
-        console.log('Sessione trovata, utente:', session.user.id);
-        setAuthUser(session.user);
-        await fetchUserProfile(session.user.id);
-      } else {
-        console.log('Nessuna sessione trovata');
-        if (mounted) setIsLoading(false);
+      if (event === 'SIGNED_OUT') {
+        setAuthUser(null);
+        setUser(null);
+        setIsLoading(false);
       }
-    };
+    });
 
-    loadSession();
-
-    // ✅ Listener eventi auth (login, logout, refresh)
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth event:', event);
-
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          if (!authUser || authUser.id !== session?.user?.id) {
-            setAuthUser(session?.user ?? null);
-            if (session?.user) await fetchUserProfile(session.user.id);
-          }
-        }
-
-        if (event === 'SIGNED_OUT') {
-          console.log('Utente disconnesso');
-          setAuthUser(null);
-          setUser(null);
-          setIsLoading(false);
-        }
-      }
-    );
-
-    // ✅ Cleanup alla disconnessione del componente
     return () => {
       mounted = false;
-      supabase.auth.stopAutoRefresh();
+      window.clearTimeout(safetyTimer);
       listener.subscription.unsubscribe();
     };
-  }, []);
-
-  // ==============================================================
-  // 🔹 Recupera profilo utente da Supabase (tabella profiles)
-  // ==============================================================
-  const fetchUserProfile = async (userId: string) => {
-    console.log('Fetching user profile for ID:', userId);
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (error) {
-      console.error('Errore fetch profilo:', error);
-      setUser(null);
-    } else {
-      console.log('Profilo caricato:', data);
-      setUser(data);
-    }
-
-    setIsLoading(false);
-  };
+  }, [applySession]);
 
   // ==============================================================
   // 🔹 Login utente con email e password
   // ==============================================================
   const login = async (email: string, password: string): Promise<boolean> => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
     if (error) {
-      console.error('Errore login:', error);
+      console.error('Errore login:', error.message);
       return false;
     }
 
     if (data.session?.user) {
-      console.log('Login riuscito:', data.session.user.id);
       setAuthUser(data.session.user);
-      await fetchUserProfile(data.session.user.id);
+      await fetchUserProfile(data.session.user);
+      setIsLoading(false);
     }
     return true;
   };
@@ -132,7 +150,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // ==============================================================
   const logout = async () => {
     await supabase.auth.signOut();
-    supabase.auth.stopAutoRefresh();
     setUser(null);
     setAuthUser(null);
   };
@@ -148,7 +165,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 // ==============================================================
- // 🔹 Hook personalizzato per usare il contesto Auth
+// 🔹 Hook personalizzato per usare il contesto Auth
 // ==============================================================
 export function useAuth() {
   const context = useContext(AuthContext);

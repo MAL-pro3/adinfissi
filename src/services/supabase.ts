@@ -11,7 +11,12 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    // Workaround: evita l'uso di `navigator.locks` da parte di supabase-js.
+    // Su alcune versioni il lock resta bloccato e fa rimanere
+    // getSession()/onAuthStateChange in attesa per sempre (spinner infinito
+    // al reload). Eseguiamo la callback direttamente, senza lock.
+    lock: (_name, _acquireTimeout, fn) => fn()
   }
 })
 
