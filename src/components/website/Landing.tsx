@@ -21,6 +21,7 @@ import GoogleReviews from './GoogleReviews';
 import InstagramFeed from './InstagramFeed';
 import Counter from './Counter';
 import HeroBackground from './HeroBackground';
+import CategoryCarousel from './CategoryCarousel';
 
 // Logo TikTok (lucide-react non ha l'icona ufficiale)
 const TiktokIcon = ({ size = 24, className = '' }: { size?: number; className?: string }) => (
@@ -47,8 +48,6 @@ const Landing: React.FC = () => {
       setIsMobileMenuOpen(false);
     }
   };
-
-  const [selectedCategoria, setSelectedCategoria] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-white">
@@ -359,49 +358,7 @@ const Landing: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categorie.map((cat) => (
-              <Link
-                key={cat.key}
-                to={`/lavori?cat=${cat.key}`}
-                onMouseEnter={() => setSelectedCategoria(cat.key)}
-                onMouseLeave={() => setSelectedCategoria(null)}
-                className="group relative overflow-hidden rounded-xl shadow-lg aspect-[3/4] block focus:outline-none focus:ring-4 focus:ring-brand-yellow-500/40 transition-all duration-300"
-              >
-                <img
-                  src={cat.copertina}
-                  alt={cat.nome}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  loading="lazy"
-                />
-
-                <div
-                  className={`absolute inset-0 bg-gradient-to-t via-black/50 to-transparent transition-opacity duration-300 ${
-                    selectedCategoria === cat.key
-                      ? 'from-black/90 opacity-100'
-                      : 'from-black/80 opacity-90'
-                  }`}
-                />
-
-                <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
-                  <div className="w-12 h-1 bg-brand-yellow-500 mb-4 transition-all duration-500 group-hover:w-20" />
-                  <h3 className="text-2xl sm:text-3xl font-bold mb-2 uppercase tracking-wide">
-                    {cat.nome}
-                  </h3>
-                  <p className="text-sm text-gray-200 mb-4 line-clamp-2">
-                    {cat.descrizione}
-                  </p>
-                  <div className="flex items-center gap-2 text-white font-semibold text-sm group-hover:text-brand-yellow-400 transition-colors">
-                    Vedi tutti i lavori
-                    <ArrowRight
-                      size={16}
-                      className="transition-transform group-hover:translate-x-1"
-                    />
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <CategoryCarousel categorie={categorie} />
 
           <div className="mt-16 text-center">
             <Link

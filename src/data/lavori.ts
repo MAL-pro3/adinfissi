@@ -1,5 +1,3 @@
-export type LavoroCategoria = 'INFISSI' | 'PERGOLATI' | 'CANCELLI' | 'PORTE';
-
 export interface FotoLavoro {
   url: string;
   titolo: string;
@@ -7,16 +5,22 @@ export interface FotoLavoro {
 }
 
 export interface CategoriaLavori {
-  key: LavoroCategoria;
+  slug: string;
   nome: string;
   descrizione: string;
   copertina: string;
   foto: FotoLavoro[];
 }
 
+/**
+ * ⚠️ FALLBACK STATICO
+ * La fonte di verità delle categorie è la tabella Supabase `gallery_categories`
+ * (gestibile dal pannello /gestionesitoweb). Questo elenco viene usato SOLO se
+ * il database non è raggiungibile, per evitare che il sito resti vuoto.
+ */
 export const categorieLavori: CategoriaLavori[] = [
   {
-    key: 'INFISSI',
+    slug: 'INFISSI',
     nome: 'Infissi',
     descrizione:
       'Infissi in alluminio e PVC di ultima generazione: finestre, porte-finestre, vetrate scorrevoli e sistemi oscillo-battenti. Isolamento termico e acustico garantito.',
@@ -56,10 +60,10 @@ export const categorieLavori: CategoriaLavori[] = [
     ],
   },
   {
-    key: 'PERGOLATI',
-    nome: 'Pergolati',
+    slug: 'PERGOTENDA_BIOCLIMATICHE',
+    nome: 'Pergotenda/bioclimatiche',
     descrizione:
-      'Pergolati in alluminio, bioclimatici e tradizionali, con o senza tende integrate. Soluzioni ideali per vivere il giardino e la terrazza in ogni stagione.',
+      'Pergotende e pergolati bioclimatici con lame orientabili o tessuto. Soluzioni ideali per vivere il giardino e la terrazza in ogni stagione.',
     copertina:
       'https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=1200',
     foto: [
@@ -96,7 +100,7 @@ export const categorieLavori: CategoriaLavori[] = [
     ],
   },
   {
-    key: 'CANCELLI',
+    slug: 'CANCELLI',
     nome: 'Cancelli',
     descrizione:
       'Cancelli pedonali e carrabili in alluminio, ferro battuto e acciaio, con automazioni di ultima generazione. Design personalizzati per ogni ingresso.',
@@ -136,10 +140,10 @@ export const categorieLavori: CategoriaLavori[] = [
     ],
   },
   {
-    key: 'PORTE',
-    nome: 'Porte',
+    slug: 'PORTONI_BLINDATI',
+    nome: 'Portoni blindati',
     descrizione:
-      'Porte d\'ingresso blindate, interne e per esterni in vari materiali e finiture. Sicurezza, design e isolamento per l\'accesso principale della tua abitazione.',
+      'Portoni d\'ingresso blindati, in vari materiali e finiture. Sicurezza, design e isolamento per l\'accesso principale della tua abitazione.',
     copertina:
       'https://images.pexels.com/photos/3622643/pexels-photo-3622643.jpeg?auto=compress&cs=tinysrgb&w=1200',
     foto: [
@@ -176,6 +180,3 @@ export const categorieLavori: CategoriaLavori[] = [
     ],
   },
 ];
-
-export const getCategoriaByKey = (key: LavoroCategoria | string) =>
-  categorieLavori.find((c) => c.key === key || c.nome.toLowerCase() === String(key).toLowerCase());

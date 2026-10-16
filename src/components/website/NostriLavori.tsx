@@ -13,13 +13,10 @@ import {
   ChevronRight,
   ArrowLeft,
 } from 'lucide-react';
-import {
-  type FotoLavoro,
-  type LavoroCategoria,
-} from '../../data/lavori';
+import { type FotoLavoro } from '../../data/lavori';
 import { useSiteImages } from '../../hooks/useSiteImages';
 
-type FiltroCategoria = 'TUTTE' | LavoroCategoria;
+type FiltroCategoria = string;
 
 const NostriLavori: React.FC = () => {
   const { categorie } = useSiteImages();
@@ -31,7 +28,7 @@ const NostriLavori: React.FC = () => {
   const filtri = useMemo(
     () => [
       { key: 'TUTTE' as FiltroCategoria, label: 'Tutti i lavori' },
-      ...categorie.map((c) => ({ key: c.key as LavoroCategoria, label: c.nome })),
+      ...categorie.map((c) => ({ key: c.slug, label: c.nome })),
     ],
     [categorie],
   );
@@ -39,7 +36,7 @@ const NostriLavori: React.FC = () => {
   const initialFiltro: FiltroCategoria = useMemo(() => {
     if (!paramCat) return 'TUTTE';
     const match = filtri.find((f) => f.key === paramCat.toUpperCase());
-    return (match?.key as FiltroCategoria) || 'TUTTE';
+    return match?.key || 'TUTTE';
   }, [paramCat, filtri]);
 
   const [filtro, setFiltro] = useState<FiltroCategoria>(initialFiltro);
@@ -50,14 +47,6 @@ const NostriLavori: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paramCat]);
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }
-  };
 
   const cambiaFiltro = (nuovo: FiltroCategoria) => {
     setFiltro(nuovo);
@@ -85,13 +74,13 @@ const NostriLavori: React.FC = () => {
         c.foto.map((f) => ({ foto: f, categoriaNome: c.nome })),
       );
     }
-    const cat = categorie.find((c) => c.key === filtro);
+    const cat = categorie.find((c) => c.slug === filtro);
     if (!cat) return [];
     return cat.foto.map((f) => ({ foto: f, categoriaNome: cat.nome }));
   }, [filtro, categorie]);
 
   const categoriaAttiva =
-    filtro !== 'TUTTE' ? categorie.find((c) => c.key === filtro) : undefined;
+    filtro !== 'TUTTE' ? categorie.find((c) => c.slug === filtro) : undefined;
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -257,18 +246,17 @@ const NostriLavori: React.FC = () => {
           </h1>
           <div className="w-24 h-1 bg-brand-yellow-500 mb-6" />
           <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl leading-relaxed">
-            Una selezione dei nostri progetti realizzati su misura: infissi,
-            pergolati, cancelli e porte. Ogni lavoro è frutto di artigianato,
-            attenzione al dettaglio e materiali di prima qualità.
+            Una selezione dei nostri progetti realizzati su misura. Ogni lavoro è
+            frutto di artigianato, attenzione al dettaglio e materiali di prima qualità.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3">
             {categorie.map((c) => (
               <button
-                key={c.key}
-                onClick={() => cambiaFiltro(c.key)}
+                key={c.slug}
+                onClick={() => cambiaFiltro(c.slug)}
                 className={`px-5 py-2.5 rounded-full font-medium transition-all border border-white/20 ${
-                  categoriaAttiva?.key === c.key
+                  categoriaAttiva?.slug === c.slug
                     ? 'bg-brand-yellow-400 text-gray-900 border-brand-yellow-400 shadow-lg shadow-brand-yellow-900/20'
                     : 'bg-white/5 text-white hover:bg-white/10'
                 }`}
